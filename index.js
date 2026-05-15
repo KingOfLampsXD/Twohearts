@@ -2,16 +2,16 @@ const { Client, GatewayIntentBits } = require('discord.js');
 const fs = require('fs');
 const OpenAI = require('openai');
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
-
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent
   ]
+});
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
 });
 
 const prefix = 'RL!';
@@ -35,53 +35,55 @@ client.once('clientReady', () => {
 client.on('messageCreate', async (message) => {
   if (message.author.bot) return;
 
-  // AI chat channel
-  if (message.channel.name === aiChannel) {
-    try {
+  try {
+
+    // AI channel
+    if (message.channel.name === aiChannel) {
+
       await message.channel.sendTyping();
 
       const response = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
+        model: 'gpt-4o-mini',
         messages: [
           {
-            role: "system",
-            content: "You are Twohearts, a friendly AI Discord assistant."
+            role: 'system',
+            content:
+              'You are Twohearts, a friendly Discord AI assistant.'
           },
           {
-            role: "user",
+            role: 'user',
             content: message.content
           }
         ]
       });
 
-      message.reply(response.choices[0].message.content);
-
-    } catch (err) {
-      console.error(err);
-      message.reply("AI error :(");
+      return message.reply(
+        response.choices[0].message.content
+      );
     }
 
-    return;
-  }
+    // RL! command system
+    if (!message.content.startsWith(prefix)) return;
 
-  // RL! command system
-  if (!message.content.startsWith(prefix)) return;
+    const args = message.content
+      .slice(prefix.length)
+      .trim()
+      .split(/ +/);
 
-  const args = message.content
-    .slice(prefix.length)
-    .trim()
-    .split(/ +/);
+    const commandName = args.shift()?.toLowerCase();
 
-  const commandName = args.shift()?.toLowerCase();
+    const command = commands.get(commandName);
 
-  const command = commands.get(commandName);
+    if (!command) return;
 
-  if (!command) return;
-
-  try {
     command.execute(message, args);
+
   } catch (err) {
     console.error(err);
+
+    message.reply(
+      `❌ ${err.message}`
+    );
   }
 });
 
