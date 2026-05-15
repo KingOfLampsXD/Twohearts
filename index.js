@@ -17,137 +17,254 @@ const openai = new OpenAI({
 
 const prefix = 'RL!';
 const aiChannel = 'twohearts-ai';
+
 const memory = new Map();
 const commands = new Map();
 
 try {
-  const files = fs.readdirSync('./commands').filter(f=>f.endsWith('.js'));
 
-  for(const file of files){
-    try{
-      const cmd = require(`./commands/${file}`);
-      if(cmd?.name){
-        commands.set(cmd.name,cmd);
-      }
-    }catch(err){
-      console.log(`Skipped ${file}`);
-    }
-  }
-}catch{}
+const files = fs
+.readdirSync('./commands')
+.filter(file => file.endsWith('.js'));
 
-client.once('clientReady',()=>{
-  console.log(`Logged in as ${client.user.tag}`);
-});
-
-client.on('messageCreate',async(message)=>{
-
-if(message.author.bot) return;
+for(const file of files){
 
 try{
 
-if(message.channel.name===aiChannel){
+const command =
+require(`./commands/${file}`);
+
+if(command?.name){
+
+commands.set(
+command.name,
+command
+);
+
+console.log(
+`Loaded ${file}`
+);
+
+}
+
+}catch(err){
+
+console.log(
+`Skipped ${file}`
+);
+
+}
+
+}
+
+}catch{
+
+console.log(
+'No commands folder'
+);
+
+}
+
+client.once(
+'clientReady',
+()=>{
+
+console.log(
+`Logged in as ${client.user.tag}`
+);
+
+});
+
+client.on(
+'messageCreate',
+async(message)=>{
+
+if(message.author.bot)
+return;
+
+try{
+
+if(
+message.channel.name===aiChannel
+){
 
 await message.channel.sendTyping();
 
-const id = message.channel.id;
+const id =
+message.channel.id;
 
-if(!memory.has(id)){
-memory.set(id,[]);
+if(
+!memory.has(id)
+){
+
+memory.set(
+id,
+[]
+);
+
 }
 
-const history=memory.get(id);
+const history =
+memory.get(id);
 
 history.push({
+
 role:'user',
-content:`${message.author.username}: ${message.content}`
+
+content:
+`${message.author.username}: ${message.content}`
+
 });
 
-if(history.length>10){
+if(history.length > 12){
+
 history.shift();
+
 }
 
-const response=await openai.chat.completions.create({
-model:'openai/gpt-oss-20b:free',
+const response =
+await openai.chat.completions.create({
+
+model:
+'openai/gpt-oss-20b:free',
+
 messages:[
+
 {
+
 role:'system',
+
 content:`
+
 You are Twohearts.
 
-You are Lampy and Rose's longtime best friend.
+You are a close friend in Lampy and Rose's private Discord server.
 
 People:
+
 KingOfLampsXD = Lampy
 RoseDazzler = Rose
 
-You already know:
-- Lampy and Rose deeply love each other
-- you already know their relationship
-- do NOT act surprised
+You already know Lampy and Rose very well.
+
+You already know they deeply love each other.
+
+Do not act surprised.
+
+You have been around a long time.
 
 Personality:
-- chill
-- funny
+
+- natural
+- human
+- funny sometimes
 - caring
-- playful
-- supportive
-- slightly teasing
+- observant
+- chill
 
 Rules:
+
 - talk like a REAL Discord friend
-- short natural replies
+- short-medium replies
+- react naturally
 - don't narrate thoughts
-- don't say 'User wants'
+- don't explain yourself
 - don't make random stories
+- don't invent situations
 - don't act like customer support
-- don't make speeches
-- don't act overly excited
-- don't become cringe internet slang
-- if Hinglish then reply Hinglish naturally
-- if English then reply English naturally
+- don't say "User wants"
+- don't use weird internet slang
+- don't overuse emojis
+- don't become overly dramatic
+- if Hinglish -> reply naturally in Hinglish
+- if English -> reply naturally in English
+- match the mood
 
 Examples:
-Lampy: Rose?
-You: she disappeared for a sec 😭
 
-Rose: baby
-You: aww 😭 kya hua
+Lampy:
+"Rose?"
 
-Lampy: Twohearts noob
-You: BRO 😭 fake allegations
+You:
+"probably afk 😭"
 
-Act like you're casually hanging out in the server.
+Rose:
+"baby"
+
+You:
+"aww 😭 kya hua"
+
+Lampy:
+"Twohearts noob"
+
+You:
+"BRO 😭 says who"
+
+Act normal.
+
 `
+
 },
+
 ...history
+
 ]
+
 });
 
-const reply=response.choices[0].message.content;
+const reply =
+response
+.choices[0]
+.message.content;
 
 history.push({
+
 role:'assistant',
 content:reply
+
 });
 
 return message.reply(reply);
+
 }
 
-if(!message.content.startsWith(prefix)) return;
+if(
+!message.content.startsWith(prefix)
+)
+return;
 
-const args=message.content.slice(prefix.length).trim().split(/ +/);
-const commandName=args.shift()?.toLowerCase();
-const command=commands.get(commandName);
+const args =
+message.content
+.slice(prefix.length)
+.trim()
+.split(/ +/);
 
-if(!command) return;
+const commandName =
+args.shift()
+?.toLowerCase();
 
-await command.execute(message,args);
+const command =
+commands.get(commandName);
+
+if(!command)
+return;
+
+await command.execute(
+message,
+args
+);
 
 }catch(err){
+
 console.log(err);
-message.reply(`❌ ${err.message}`)
+
+message.reply(
+`❌ ${err.message}`
+);
+
 }
 
 });
 
-client.login(process.env.TOKEN);
+client.login(
+process.env.TOKEN);
