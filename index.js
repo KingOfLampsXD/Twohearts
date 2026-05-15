@@ -18,6 +18,9 @@ const openai = new OpenAI({
 const prefix = 'RL!';
 const aiChannel = 'twohearts-ai';
 
+// keeps recent chat memory per channel
+const memory = new Map();
+
 const commands = new Map();
 
 const commandFiles = fs
@@ -38,42 +41,76 @@ client.on('messageCreate', async (message) => {
 
   try {
 
-    // AI chat channel
+    // AI channel
     if (message.channel.name === aiChannel) {
 
       await message.channel.sendTyping();
+
+      const channelId = message.channel.id;
+
+      if (!memory.has(channelId)) {
+        memory.set(channelId, []);
+      }
+
+      const history = memory.get(channelId);
+
+      history.push({
+        role: 'user',
+        content: `${message.author.username}: ${message.content}`
+      });
+
+      // keep last 10 messages
+      if (history.length > 10) {
+        history.shift();
+      }
 
       const response = await openai.chat.completions.create({
         model: 'openai/gpt-oss-20b:free',
         messages: [
           {
             role: 'system',
-            content:
-              'You are Twohearts, a friendly Discord AI assistant. Keep responses natural and helpful.'
+            content: `
+You are Twohearts.
+
+You are a natural Discord friend:
+- casual and human-like
+- fun and expressive
+- not robotic
+- remember the flow of the conversation
+- love Minecraft, creativity and chatting
+- respond naturally
+- avoid repetitive "I'm sorry..." style responses
+`
           },
-          {
-            role: 'user',
-            content: message.content
-          }
+          ...history
         ]
       });
 
-      return message.reply(
-        response.choices[0].message.content
-      );
+      const reply =
+        response.choices[0].message.content;
+
+      history.push({
+        role: 'assistant',
+        content: reply
+      });
+
+      return message.reply(reply);
     }
 
     // RL! commands
-    if (!message.content.startsWith(prefix)) return;
+    if (!message.content.startsWith(prefix))
+      return;
 
     const args = message.content
       .slice(prefix.length)
       .trim()
       .split(/ +/);
 
-    const commandName = args.shift()?.toLowerCase();
+    const commandName =
+      args.shift()?.toLowerCase();
 
-    const command = commands.get(commandName);
+    const command =
+      commands.get(commandName);
 
     if (!command) return;
 
@@ -81,7 +118,6 @@ client.on('messageCreate', async (message) => {
 
   } catch (err) {
     console.error(err);
-
     message.reply(`❌ ${err.message}`);
   }
 });
