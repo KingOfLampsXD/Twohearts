@@ -107,14 +107,58 @@ id,
 const history =
 memory.get(id);
 
+
+// NEW: image/screenshot support
+
+const attachments =
+[...message.attachments.values()];
+
+let userContent=[];
+
+if(message.content){
+
+userContent.push({
+
+type:'text',
+
+text:
+`${message.author.username}: ${message.content}`
+
+});
+
+}
+
+for(const file of attachments){
+
+if(
+file.contentType?.startsWith('image')
+){
+
+userContent.push({
+
+type:'image_url',
+
+image_url:{
+url:file.url
+}
+
+});
+
+}
+
+}
+
+
 history.push({
 
 role:'user',
 
-content:
-`${message.author.username}: ${message.content}`
+content:userContent.length
+? userContent
+: `${message.author.username}: ${message.content}`
 
 });
+
 
 if(history.length > 12){
 
@@ -126,7 +170,7 @@ const response =
 await openai.chat.completions.create({
 
 model:
-'openai/gpt-oss-20b:free',
+'google/gemini-2.0-flash-exp:free',
 
 messages:[
 
