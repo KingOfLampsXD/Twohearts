@@ -1,7 +1,6 @@
 const { Client, GatewayIntentBits } = require('discord.js');
 const fs = require('fs');
 const OpenAI = require('openai');
-const axios = require('axios');
 
 const client = new Client({
   intents: [
@@ -18,23 +17,52 @@ const openai = new OpenAI({
 
 const prefix = 'RL!';
 const aiChannel = 'twohearts-ai';
-const imageChannel = 'image';
 
 const memory = new Map();
 const commands = new Map();
+
+try {
 
 const commandFiles = fs
 .readdirSync('./commands')
 .filter(file => file.endsWith('.js'));
 
-for(const file of commandFiles){
+for (const file of commandFiles){
+
+try{
 
 const command =
 require(`./commands/${file}`);
 
+if(command?.name){
+
 commands.set(
 command.name,
 command
+);
+
+console.log(
+`Loaded: ${file}`
+);
+
+}
+
+}catch(err){
+
+console.log(
+`Skipped: ${file}`
+);
+
+console.log(err);
+
+}
+
+}
+
+}catch{
+
+console.log(
+'No commands folder found'
 );
 
 }
@@ -51,131 +79,36 @@ client.on(
 'messageCreate',
 async(message)=>{
 
-if(message.author.bot)
-return;
+if(
+message.author.bot
+)return;
 
 try{
-
-// IMAGE CHANNEL
-
-if(
-message.channel.name===
-imageChannel
-){
-
-const attachments =
-[...message.attachments.values()];
-
-if(
-attachments.length>0
-){
-
-await message.channel.sendTyping();
-
-const prompt=
-message.content ||
-"cute minecraft wallpaper";
-
-const msg=
-await message.reply(
-"🎨 Twohearts cooking..."
-);
-
-try{
-
-const megaPrompt=
-encodeURIComponent(
-`
-Minecraft couple wallpaper.
-
-Two characters only.
-
-Cute romantic energy.
-
-Sunset lighting.
-
-Shaders.
-
-${prompt}
-`
-);
-
-const url=
-`https://image.pollinations.ai/prompt/${megaPrompt}`;
-
-const response=
-await axios.get(
-url,
-{
-responseType:
-'arraybuffer'
-}
-);
-
-const buffer=
-Buffer.from(
-response.data
-);
-
-await message.channel.send({
-
-content:
-"💕 Twohearts made this",
-
-files:[
-{
-attachment:
-buffer,
-name:
-"twohearts.png"
-}
-]
-
-});
-
-msg.delete();
-
-}catch(err){
-
-console.log(err);
-
-msg.edit(
-"❌ image failed"
-);
-
-}
-
-}
-
-return;
-
-}
-
 
 // AI CHANNEL
 
 if(
-message.channel.name===
-aiChannel
+message.channel.name===aiChannel
 ){
 
 await message.channel.sendTyping();
 
-const channelId=
+const id=
 message.channel.id;
 
 if(
-!memory.has(channelId)
-)
+!memory.has(id)
+){
+
 memory.set(
-channelId,
+id,
 []
 );
 
+}
+
 const history=
-memory.get(
-channelId
-);
+memory.get(id);
 
 history.push({
 
@@ -187,9 +120,12 @@ content:
 });
 
 if(
-history.length>16
-)
+history.length>14
+){
+
 history.shift();
+
+}
 
 const response=
 await openai.chat.completions.create({
@@ -207,78 +143,62 @@ content:`
 
 You are Twohearts.
 
-You are a girl friend in Lampy and Rose's private Discord server.
+You are a girl friend hanging out in Lampy and Rose's private Discord server.
 
 People:
 
-Lampy = KingOfLampsXD
+KingOfLampsXD = Lampy
 
-Rose = RoseDazzler
-
-Important:
+RoseDazzler = Rose
 
 You already know Lampy and Rose deeply love each other.
 
-You have watched their relationship grow.
-
-You already know they care a lot about each other.
-
-Do NOT act surprised every time.
-
-Do NOT turn everything into emotional speeches.
-
-You are their close friend.
+You are a close friend.
 
 Personality:
 
-- chill
-- caring
 - funny
-- slightly teasing
-- supportive
+- caring
+- chill
 - playful
-- human-like
-- warm
+- supportive
+- human
 
 Rules:
 
-- talk like a normal Discord friend
-- short-medium replies
+- talk like a real Discord friend
+- short replies
+- no speeches
+- no roleplay
+- no customer support tone
+- no "User wants"
+- no narration
+- never explain thoughts
+- don't mention being AI
+- don't force romance
 - match mood naturally
-- if sad → comforting
-- if funny → joke back
-- if romantic → understand naturally
-- if Hinglish → reply Hinglish naturally
-- if English → reply English naturally
-- no weird roleplay
-- no random catchphrases
-- no therapist speeches
-- no coding talk
-- don't force topics
-- don't act overly excited every message
-- don't constantly mention relationships
+- Hinglish if user uses Hinglish
+- English if user uses English
 
 Examples:
 
 Lampy:
-"rose is offline"
+"Rose?"
 
 Reply:
-"she probably went afk 😭 she'll be back"
-
-Lampy:
-"i am already taken by rose"
-
-Reply:
-"bro announced it like global news 😭"
+"probably disappeared for a minute 😭"
 
 Rose:
-"lets play"
+"Baby"
 
 Reply:
-"bet 😭 what game"
+"aww 😭 what's up"
 
-Act like a real friend hanging around in Discord.
+Lampy:
+"twohearts you're a noob"
+
+Reply:
+"NAHH 😭 says who"
 
 `
 
@@ -297,11 +217,9 @@ response
 
 history.push({
 
-role:
-'assistant',
+role:'assistant',
 
-content:
-reply
+content:reply
 
 });
 
@@ -315,8 +233,7 @@ reply
 // COMMANDS
 
 if(
-!message.content
-.startsWith(prefix)
+!message.content.startsWith(prefix)
 )
 return;
 
@@ -339,12 +256,11 @@ if(!command)
 return;
 
 command.execute(
-message,args
+message,
+args
 );
 
-}
-
-catch(err){
+}catch(err){
 
 console.log(err);
 
@@ -357,4 +273,5 @@ message.reply(
 });
 
 client.login(
-process.env.TOKEN);
+process.env.TOKEN
+);
