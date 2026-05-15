@@ -1,3 +1,5 @@
+const axios = require('axios');
+
 module.exports = {
   name: 'image',
 
@@ -7,7 +9,7 @@ module.exports = {
 
     if (!prompt) {
       return message.reply(
-        'Usage: RL!image <prompt>'
+        '✨ Usage: RL!image <what you want>'
       );
     }
 
@@ -16,7 +18,7 @@ module.exports = {
 
     if (attachments.length === 0) {
       return message.reply(
-        'Upload image(s) too!'
+        '📸 Upload image(s) too!'
       );
     }
 
@@ -27,8 +29,9 @@ module.exports = {
         file => file.url
       );
 
-    message.reply(
-`🎨 Starting image edit...
+    const loading =
+      await message.reply(
+`🎨 Twohearts is creating something...
 
 🖼 Images: ${imageUrls.length}
 
@@ -36,9 +39,45 @@ module.exports = {
 ${prompt}
 
 ⏳ Please wait...`
-    );
+      );
 
-    // image AI code goes here later
+    try {
+
+      console.log(
+        'Images:',
+        imageUrls
+      );
+
+      // future image API spot
+
+      await new Promise(
+        r=>setTimeout(r,5000)
+      );
+
+      loading.edit(
+
+`💕 Twohearts received everything
+
+🖼 Images:
+${imageUrls.length}
+
+✍ Prompt:
+${prompt}
+
+✨ Ready for image generation`
+      );
+
+    }
+
+    catch(err){
+
+      console.error(err);
+
+      loading.edit(
+`❌ ${err.message}`
+      );
+
+    }
 
   }
 };
