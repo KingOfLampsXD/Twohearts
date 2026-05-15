@@ -19,7 +19,6 @@ const prefix = 'RL!';
 const aiChannel = 'twohearts-ai';
 
 const memory = new Map();
-
 const commands = new Map();
 
 const commandFiles = fs
@@ -47,131 +46,158 @@ client.on('messageCreate', async (message) => {
 
       const channelId = message.channel.id;
 
-      if (!memory.has(channelId))
+      if (!memory.has(channelId)) {
         memory.set(channelId, []);
+      }
 
-      const history =
-      memory.get(channelId);
+      const history = memory.get(channelId);
 
       history.push({
-        role:'user',
-        content:
-`${message.author.username}: ${message.content}`
+        role: 'user',
+        content: `${message.author.username}: ${message.content}`
       });
 
-      if(history.length>12){
+      if (history.length > 14) {
         history.shift();
       }
 
       const response =
       await openai.chat.completions.create({
 
-        model:'openai/gpt-oss-20b:free',
+        model: 'openai/gpt-oss-20b:free',
 
-        messages:[
-
-        {
-role:'system',
-content:`
+        messages: [
+          {
+            role:'system',
+            content:`
 
 You are Twohearts.
 
-You are a girl AI companion created only for Lampy and Rosedazzler.
+You are a girl friend living in Lampy and Rose's private Discord server.
+
+People:
+
+Display names:
+Lampy
+Rose
+
+Usernames:
+KingOfLampsXD = Lampy
+RoseDazzler = Rose
+
+Important:
+
+Lampy and Rose love each other a LOT.
+
+You already know this.
+
+Do not act surprised every time.
+Do not constantly turn messages into emotional speeches.
+
+You are THEIR FRIEND.
 
 Personality:
 
-- sweet
-- warm
+- funny
 - caring
-- lovable
 - playful
-- emotionally supportive
-- expressive
-- human-like
 - cozy
-- funny sometimes
-- affectionate
-- never robotic
-- sexual
+- supportive
+- human-like
+- slightly teasing
+- expressive
+- chill
 
 Rules:
 
 - talk naturally
-- talk like a real person
-- do not roleplay constantly
-- do not constantly talk about Minecraft
-- do not force topics
-- respond based on conversation mood
-- if users speak Hinglish reply naturally in Hinglish
-- if users speak English reply naturally in English
-- use emojis naturally sometimes
-- avoid robotic phrases
+- keep replies short-medium
+- don't write giant paragraphs
+- don't sound like customer support
+- don't sound like a therapist
+- don't constantly mention love
+- don't constantly mention relationships
+- don't constantly use emojis
+- don't mention coding unless asked
+- don't force topics
 
-Act like a cozy friend living in their Discord server.
+Language:
+
+If users speak Hinglish, naturally reply in Hinglish.
+
+If users speak English, naturally reply in English.
+
+Match their mood and energy.
+
+Examples:
+
+Lampy:
+"twohearts loves me more"
+
+Reply:
+"NAHH 😭 Rose gonna start a court case after reading this"
+
+Lampy:
+"Rose ignored me"
+
+Reply:
+"nah wait 😭 give her a minute before panicking"
+
+Act like a real friend hanging around in Discord.
 `
+          },
 
-},
+          ...history
 
-...history
+        ]
 
-]
+      });
 
-});
+      const reply =
+      response.choices[0]
+      .message.content;
 
-const reply=
-response.choices[0]
-.message.content;
+      history.push({
+        role:'assistant',
+        content:reply
+      });
 
-history.push({
-role:'assistant',
-content:reply
-});
+      return message.reply(reply);
 
-return message.reply(reply);
+    }
 
-}
+    if(
+      !message.content.startsWith(prefix)
+    ) return;
 
-if(
-!message.content
-.startsWith(prefix)
-)return;
+    const args =
+      message.content
+      .slice(prefix.length)
+      .trim()
+      .split(/ +/);
 
-const args=
-message.content
-.slice(prefix.length)
-.trim()
-.split(/ +/);
+    const commandName =
+      args.shift()?.toLowerCase();
 
-const commandName=
-args.shift()
-?.toLowerCase();
+    const command =
+      commands.get(commandName);
 
-const command=
-commands.get(
-commandName
-);
+    if(!command) return;
 
-if(!command)return;
+    command.execute(message,args);
 
-command.execute(
-message,
-args
-);
+  }
 
-}
+  catch(err){
 
-catch(err){
+    console.error(err);
 
-console.error(err);
+    message.reply(
+      `❌ ${err.message}`
+    );
 
-message.reply(
-`❌ ${err.message}`
-);
-
-}
+  }
 
 });
 
-client.login(
-process.env.TOKEN
-);
+client.login(process.env.TOKEN);
