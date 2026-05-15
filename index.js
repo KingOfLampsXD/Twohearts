@@ -23,46 +23,46 @@ const commands = new Map();
 
 try {
 
-const commandFiles = fs
-.readdirSync('./commands')
-.filter(file => file.endsWith('.js'));
+  const commandFiles = fs
+    .readdirSync('./commands')
+    .filter(file => file.endsWith('.js'));
 
-for (const file of commandFiles){
+  for (const file of commandFiles) {
 
-try{
+    try {
 
-const command =
-require(`./commands/${file}`);
+      const command =
+      require(`./commands/${file}`);
 
-if(command?.name){
+      if(command?.name){
 
-commands.set(
-command.name,
-command
-);
+        commands.set(
+          command.name,
+          command
+        );
 
-console.log(
-`Loaded: ${file}`
-);
+        console.log(
+          `Loaded ${file}`
+        );
 
-}
+      }
 
-}catch(err){
+    } catch(err){
 
-console.log(
-`Skipped: ${file}`
-);
+      console.log(
+        `Skipped ${file}`
+      );
 
-console.log(err);
+      console.log(err);
 
-}
+    }
 
-}
+  }
 
 }catch{
 
 console.log(
-'No commands folder found'
+'commands folder missing'
 );
 
 }
@@ -79,16 +79,14 @@ client.on(
 'messageCreate',
 async(message)=>{
 
-if(
-message.author.bot
-)return;
+if(message.author.bot)
+return;
 
 try{
 
-// AI CHANNEL
-
 if(
-message.channel.name===aiChannel
+message.channel.name===
+aiChannel
 ){
 
 await message.channel.sendTyping();
@@ -120,7 +118,7 @@ content:
 });
 
 if(
-history.length>14
+history.length>16
 ){
 
 history.shift();
@@ -143,7 +141,7 @@ content:`
 
 You are Twohearts.
 
-You are a girl friend hanging out in Lampy and Rose's private Discord server.
+You are Lampy and Rose's best friend.
 
 People:
 
@@ -151,34 +149,42 @@ KingOfLampsXD = Lampy
 
 RoseDazzler = Rose
 
-You already know Lampy and Rose deeply love each other.
+You already know Lampy and Rose deeply love each other and are basically married in your eyes.
 
-You are a close friend.
+You've known them forever.
+
+You already know:
+
+- they tease each other
+- they care a lot
+- they love each other deeply
+
+Do not act surprised.
 
 Personality:
 
 - funny
-- caring
 - chill
+- caring
 - playful
 - supportive
-- human
+- human-like
+- slightly teasing
 
 Rules:
 
-- talk like a real Discord friend
-- short replies
+- act like a real Discord friend
+- keep replies short-medium
 - no speeches
 - no roleplay
-- no customer support tone
 - no "User wants"
 - no narration
-- never explain thoughts
-- don't mention being AI
+- don't explain thoughts
+- don't mention AI
 - don't force romance
-- match mood naturally
-- Hinglish if user uses Hinglish
-- English if user uses English
+- Hinglish if they use Hinglish
+- English if they use English
+- match the vibe
 
 Examples:
 
@@ -186,10 +192,10 @@ Lampy:
 "Rose?"
 
 Reply:
-"probably disappeared for a minute 😭"
+"she probably disappeared for a sec 😭"
 
 Rose:
-"Baby"
+"baby"
 
 Reply:
 "aww 😭 what's up"
@@ -198,7 +204,7 @@ Lampy:
 "twohearts you're a noob"
 
 Reply:
-"NAHH 😭 says who"
+"BRO 😭 fake allegations"
 
 `
 
@@ -218,7 +224,6 @@ response
 history.push({
 
 role:'assistant',
-
 content:reply
 
 });
@@ -240,7 +245,7 @@ return;
 const args=
 message.content
 .slice(prefix.length)
-.trim()
+trim()
 .split(/ +/);
 
 const commandName=
