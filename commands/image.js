@@ -16,20 +16,29 @@ module.exports = {
 
     if (attachments.length === 0) {
       return message.reply(
-        'Upload 1 or more images with your prompt.'
+        'Upload image(s) too!'
       );
     }
 
     await message.channel.sendTyping();
 
-    const imageUrls = attachments.map(
-      file => file.url
-    );
+    const imageUrls =
+      attachments.map(
+        file => file.url
+      );
 
     message.reply(
-      `🎨 Got ${imageUrls.length} image(s)\nPrompt: ${prompt}\n\nPreparing generation...`
+`🎨 Starting image edit...
+
+🖼 Images: ${imageUrls.length}
+
+✍ Prompt:
+${prompt}
+
+⏳ Please wait...`
     );
 
-    // image API goes here later
+    // image AI code goes here later
+
   }
 };
