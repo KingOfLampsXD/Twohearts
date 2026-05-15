@@ -1,5 +1,10 @@
 const { Client, GatewayIntentBits } = require('discord.js');
 const fs = require('fs');
+const OpenAI = require('openai');
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
 
 const client = new Client({
   intents: [
@@ -32,12 +37,32 @@ client.on('messageCreate', async message => {
 
   // AI channel
   if (message.channel.name === aiChannel) {
-    const msg = message.content;
+    try {
 
-    if (!msg) return;
+      await message.channel.sendTyping();
 
-    // fake AI for now
-    message.reply(`You said: ${msg}`);
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: [
+          {
+            role: "system",
+            content: "You are Twohearts, a friendly Discord AI assistant."
+          },
+          {
+            role: "user",
+            content: message.content
+          }
+        ]
+      });
+
+      message.reply(
+        response.choices[0].message.content
+      );
+
+    } catch (err) {
+      console.error(err);
+      message.reply("AI error :(");
+    }
 
     return;
   }
@@ -56,11 +81,8 @@ client.on('messageCreate', async message => {
 
   if (!command) return;
 
-  try {
-    command.execute(message, args);
-  } catch (error) {
-    console.error(error);
-  }
+  command.execute(message, args);
+
 });
 
 client.login(process.env.TOKEN);
