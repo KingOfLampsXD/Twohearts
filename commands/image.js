@@ -1,4 +1,9 @@
-const axios = require('axios');
+const OpenAI = require('openai');
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENROUTER_API_KEY,
+  baseURL: 'https://openrouter.ai/api/v1'
+});
 
 module.exports = {
   name: 'image',
@@ -9,54 +14,76 @@ module.exports = {
 
     if (!prompt) {
       return message.reply(
-        '✨ Usage: RL!image <prompt>'
+        'Usage: RL!image <prompt>'
       );
     }
 
     const attachments =
       [...message.attachments.values()];
 
-    if (attachments.length === 0) {
-      return message.reply(
-        '📸 Upload image(s) too!'
-      );
-    }
-
     await message.channel.sendTyping();
-
-    const imageUrls =
-      attachments.map(file => file.url);
 
     const loading =
       await message.reply(
-`🎨 Twohearts is creating something...
-
-🖼 Images: ${imageUrls.length}
-
-✍ Prompt:
-${prompt}
-
-⏳ Generating...`
+        '🎨 Twohearts is generating...'
       );
 
     try {
 
-      // placeholder for actual image service
-      console.log(imageUrls);
+      const content = [
+        {
+          type: "text",
+          text:
+`Create an image: ${prompt}`
+        }
+      ];
 
-      await new Promise(
-        r => setTimeout(r, 8000)
-      );
+      // add uploaded images
+      for (const file of attachments) {
+        content.push({
+          type: "image_url",
+          image_url: {
+            url: file.url
+          }
+        });
+      }
 
-      await loading.edit(
-`✨ Generation system ready
+      const response =
+      await openai.chat.completions.create({
 
-Prompt:
-${prompt}
+        model:
+        "google/gemini-2.5-flash-image",
 
-Images received:
-${imageUrls.length}`
-      );
+        modalities: ["image","text"],
+
+        messages: [
+          {
+            role: "user",
+            content
+          }
+        ]
+
+      });
+
+      const image =
+      response.choices?.[0]
+      ?.message?.images?.[0];
+
+      if (!image) {
+        return loading.edit(
+          '❌ No image returned'
+        );
+      }
+
+      await message.channel.send({
+        content:
+        '💕 Made by Twohearts',
+        files: [
+          image.image_url.url
+        ]
+      });
+
+      loading.delete();
 
     } catch(err){
 
