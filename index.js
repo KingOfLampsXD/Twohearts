@@ -32,13 +32,12 @@ client.once('clientReady', () => {
   console.log(`Logged in as ${client.user.tag}`);
 });
 
-client.on('messageCreate', async message => {
+client.on('messageCreate', async (message) => {
   if (message.author.bot) return;
 
-  // AI channel
+  // AI chat channel
   if (message.channel.name === aiChannel) {
     try {
-
       await message.channel.sendTyping();
 
       const response = await openai.chat.completions.create({
@@ -46,7 +45,7 @@ client.on('messageCreate', async message => {
         messages: [
           {
             role: "system",
-            content: "You are Twohearts, a friendly Discord AI assistant."
+            content: "You are Twohearts, a friendly AI Discord assistant."
           },
           {
             role: "user",
@@ -55,9 +54,7 @@ client.on('messageCreate', async message => {
         ]
       });
 
-      message.reply(
-        response.choices[0].message.content
-      );
+      message.reply(response.choices[0].message.content);
 
     } catch (err) {
       console.error(err);
@@ -67,7 +64,7 @@ client.on('messageCreate', async message => {
     return;
   }
 
-  // RL! commands
+  // RL! command system
   if (!message.content.startsWith(prefix)) return;
 
   const args = message.content
@@ -81,8 +78,11 @@ client.on('messageCreate', async message => {
 
   if (!command) return;
 
-  command.execute(message, args);
-
+  try {
+    command.execute(message, args);
+  } catch (err) {
+    console.error(err);
+  }
 });
 
 client.login(process.env.TOKEN);
