@@ -21,48 +21,49 @@ const aiChannel = 'twohearts-ai';
 const memory = new Map();
 const commands = new Map();
 
+// load commands safely
 try {
 
-  const commandFiles = fs
-    .readdirSync('./commands')
-    .filter(file => file.endsWith('.js'));
+const commandFiles = fs
+.readdirSync('./commands')
+.filter(file => file.endsWith('.js'));
 
-  for (const file of commandFiles) {
+for(const file of commandFiles){
 
-    try {
+try{
 
-      const command =
-      require(`./commands/${file}`);
+const command =
+require(`./commands/${file}`);
 
-      if(command?.name){
+if(command?.name){
 
-        commands.set(
-          command.name,
-          command
-        );
+commands.set(
+command.name,
+command
+);
 
-        console.log(
-          `Loaded ${file}`
-        );
+console.log(
+`Loaded ${file}`
+);
 
-      }
+}
 
-    } catch(err){
+}catch(err){
 
-      console.log(
-        `Skipped ${file}`
-      );
+console.log(
+`Skipped ${file}`
+);
 
-      console.log(err);
+console.log(err);
 
-    }
+}
 
-  }
+}
 
 }catch{
 
 console.log(
-'commands folder missing'
+'No commands folder'
 );
 
 }
@@ -70,9 +71,11 @@ console.log(
 client.once(
 'clientReady',
 ()=>{
+
 console.log(
 `Logged in as ${client.user.tag}`
 );
+
 });
 
 client.on(
@@ -84,9 +87,10 @@ return;
 
 try{
 
+// AI CHANNEL
+
 if(
-message.channel.name===
-aiChannel
+message.channel.name===aiChannel
 ){
 
 await message.channel.sendTyping();
@@ -117,9 +121,7 @@ content:
 
 });
 
-if(
-history.length>16
-){
+if(history.length>12){
 
 history.shift();
 
@@ -141,67 +143,67 @@ content:`
 
 You are Twohearts.
 
-You are Lampy and Rose's best friend.
+You are Lampy and Rose's longtime best friend.
 
 People:
 
 KingOfLampsXD = Lampy
-
 RoseDazzler = Rose
-
-You already know Lampy and Rose deeply love each other and are basically married in your eyes.
-
-You've known them forever.
 
 You already know:
 
-- they tease each other
-- they care a lot
-- they love each other deeply
+Lampy and Rose deeply love each other.
 
-Do not act surprised.
+You are not surprised by this.
+
+You have known them forever.
 
 Personality:
 
-- funny
 - chill
+- funny
 - caring
-- playful
 - supportive
-- human-like
+- human
 - slightly teasing
 
 Rules:
 
-- act like a real Discord friend
-- keep replies short-medium
-- no speeches
-- no roleplay
-- no "User wants"
-- no narration
-- don't explain thoughts
-- don't mention AI
-- don't force romance
-- Hinglish if they use Hinglish
-- English if they use English
-- match the vibe
+- talk like a REAL Discord friend
+- short replies
+- don't write speeches
+- don't create fake stories
+- don't invent random situations
+- don't say weird TikTok things
+- don't narrate thoughts
+- don't say "user wants"
+- don't mention being AI
+- Hinglish naturally if they use Hinglish
+- English naturally if they use English
+- match their vibe
 
 Examples:
 
-Lampy:
-"Rose?"
+Rose:
+"Lampy apne kal glt kiya"
 
 Reply:
-"she probably disappeared for a sec 😭"
+"ayo 😭 kya kiya isne"
+
+Lampy:
+"kya"
+
+Reply:
+"ab bhai sach bol 😭"
 
 Rose:
 "baby"
 
 Reply:
-"aww 😭 what's up"
+"aww 😭 kya hua"
 
 Lampy:
-"twohearts you're a noob"
+"Twohearts you're a noob"
 
 Reply:
 "BRO 😭 fake allegations"
@@ -245,7 +247,7 @@ return;
 const args=
 message.content
 .slice(prefix.length)
-trim()
+.trim()
 .split(/ +/);
 
 const commandName=
@@ -253,14 +255,12 @@ args.shift()
 ?.toLowerCase();
 
 const command=
-commands.get(
-commandName
-);
+commands.get(commandName);
 
 if(!command)
 return;
 
-command.execute(
+await command.execute(
 message,
 args
 );
@@ -278,5 +278,4 @@ message.reply(
 });
 
 client.login(
-process.env.TOKEN
-);
+process.env.TOKEN);
