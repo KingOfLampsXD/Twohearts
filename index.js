@@ -11,7 +11,8 @@ const client = new Client({
 });
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
+  apiKey: process.env.OPENROUTER_API_KEY,
+  baseURL: 'https://openrouter.ai/api/v1'
 });
 
 const prefix = 'RL!';
@@ -37,18 +38,18 @@ client.on('messageCreate', async (message) => {
 
   try {
 
-    // AI channel
+    // AI chat channel
     if (message.channel.name === aiChannel) {
 
       await message.channel.sendTyping();
 
       const response = await openai.chat.completions.create({
-        model: 'gpt-4o-mini',
+        model: 'meta-llama/llama-3.1-8b-instruct:free',
         messages: [
           {
             role: 'system',
             content:
-              'You are Twohearts, a friendly Discord AI assistant.'
+              'You are Twohearts, a smart, friendly Discord AI assistant.'
           },
           {
             role: 'user',
@@ -62,7 +63,7 @@ client.on('messageCreate', async (message) => {
       );
     }
 
-    // RL! command system
+    // RL! commands
     if (!message.content.startsWith(prefix)) return;
 
     const args = message.content
@@ -81,9 +82,7 @@ client.on('messageCreate', async (message) => {
   } catch (err) {
     console.error(err);
 
-    message.reply(
-      `❌ ${err.message}`
-    );
+    message.reply(`❌ ${err.message}`);
   }
 });
 
