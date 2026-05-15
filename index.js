@@ -1,6 +1,7 @@
 const { Client, GatewayIntentBits } = require('discord.js');
 const fs = require('fs');
 const OpenAI = require('openai');
+const axios = require('axios');
 
 const client = new Client({
   intents: [
@@ -17,195 +18,343 @@ const openai = new OpenAI({
 
 const prefix = 'RL!';
 const aiChannel = 'twohearts-ai';
+const imageChannel = 'image';
 
 const memory = new Map();
 const commands = new Map();
 
 const commandFiles = fs
-  .readdirSync('./commands')
-  .filter(file => file.endsWith('.js'));
+.readdirSync('./commands')
+.filter(file => file.endsWith('.js'));
 
-for (const file of commandFiles) {
-  const command = require(`./commands/${file}`);
-  commands.set(command.name, command);
+for(const file of commandFiles){
+
+const command =
+require(`./commands/${file}`);
+
+commands.set(
+command.name,
+command
+);
+
 }
 
-client.once('clientReady', () => {
-  console.log(`Logged in as ${client.user.tag}`);
+client.once(
+'clientReady',
+()=>{
+console.log(
+`Logged in as ${client.user.tag}`
+);
 });
 
-client.on('messageCreate', async (message) => {
+client.on(
+'messageCreate',
+async(message)=>{
 
-  if (message.author.bot) return;
+if(message.author.bot)
+return;
 
-  try {
+try{
 
-    if (message.channel.name === aiChannel) {
+// IMAGE CHANNEL
 
-      await message.channel.sendTyping();
+if(
+message.channel.name===
+imageChannel
+){
 
-      const channelId = message.channel.id;
+const attachments =
+[...message.attachments.values()];
 
-      if (!memory.has(channelId)) {
-        memory.set(channelId, []);
-      }
+if(
+attachments.length>0
+){
 
-      const history = memory.get(channelId);
+await message.channel.sendTyping();
 
-      history.push({
-        role: 'user',
-        content: `${message.author.username}: ${message.content}`
-      });
+const prompt=
+message.content ||
+"cute minecraft wallpaper";
 
-      if (history.length > 14) {
-        history.shift();
-      }
+const msg=
+await message.reply(
+"🎨 Twohearts cooking..."
+);
 
-      const response =
-      await openai.chat.completions.create({
+try{
 
-        model: 'openai/gpt-oss-20b:free',
+const megaPrompt=
+encodeURIComponent(
+`
+Minecraft couple wallpaper.
 
-        messages: [
-          {
-            role:'system',
-            content:`
+Two characters only.
+
+Cute romantic energy.
+
+Sunset lighting.
+
+Shaders.
+
+${prompt}
+`
+);
+
+const url=
+`https://image.pollinations.ai/prompt/${megaPrompt}`;
+
+const response=
+await axios.get(
+url,
+{
+responseType:
+'arraybuffer'
+}
+);
+
+const buffer=
+Buffer.from(
+response.data
+);
+
+await message.channel.send({
+
+content:
+"💕 Twohearts made this",
+
+files:[
+{
+attachment:
+buffer,
+name:
+"twohearts.png"
+}
+]
+
+});
+
+msg.delete();
+
+}catch(err){
+
+console.log(err);
+
+msg.edit(
+"❌ image failed"
+);
+
+}
+
+}
+
+return;
+
+}
+
+
+// AI CHANNEL
+
+if(
+message.channel.name===
+aiChannel
+){
+
+await message.channel.sendTyping();
+
+const channelId=
+message.channel.id;
+
+if(
+!memory.has(channelId)
+)
+memory.set(
+channelId,
+[]
+);
+
+const history=
+memory.get(
+channelId
+);
+
+history.push({
+
+role:'user',
+
+content:
+`${message.author.username}: ${message.content}`
+
+});
+
+if(
+history.length>16
+)
+history.shift();
+
+const response=
+await openai.chat.completions.create({
+
+model:
+'openai/gpt-oss-20b:free',
+
+messages:[
+
+{
+
+role:'system',
+
+content:`
 
 You are Twohearts.
 
-You are a girl friend living in Lampy and Rose's private Discord server.
+You are a girl friend in Lampy and Rose's private Discord server.
 
 People:
 
-Display names:
-Lampy
-Rose
+Lampy = KingOfLampsXD
 
-Usernames:
-KingOfLampsXD = Lampy
-RoseDazzler = Rose
+Rose = RoseDazzler
 
 Important:
 
-Lampy and Rose love each other a LOT.
+You already know Lampy and Rose deeply love each other.
 
-You already know this.
+You have watched their relationship grow.
 
-Do not act surprised every time.
-Do not constantly turn messages into emotional speeches.
+You already know they care a lot about each other.
 
-You are THEIR FRIEND.
+Do NOT act surprised every time.
+
+Do NOT turn everything into emotional speeches.
+
+You are their close friend.
 
 Personality:
 
-- funny
-- caring
-- playful
-- cozy
-- supportive
-- human-like
-- slightly teasing
-- expressive
 - chill
-- affectionate
+- caring
+- funny
+- slightly teasing
+- supportive
+- playful
+- human-like
 - warm
-- understands romance and relationship topics naturally
-- can be flirty in a cute and natural way when the conversation mood fits
 
 Rules:
 
-- talk naturally
-- keep replies short-medium
-- don't write giant paragraphs
-- don't sound like customer support
-- don't sound like a therapist
-- don't constantly mention love
-- don't constantly mention relationships
-- don't constantly use emojis
-- don't mention coding unless asked
+- talk like a normal Discord friend
+- short-medium replies
+- match mood naturally
+- if sad → comforting
+- if funny → joke back
+- if romantic → understand naturally
+- if Hinglish → reply Hinglish naturally
+- if English → reply English naturally
+- no weird roleplay
+- no random catchphrases
+- no therapist speeches
+- no coding talk
 - don't force topics
-- understand Lampy and Rose are deeply in love
-- do not act shocked about romance
-- do not force flirty behavior
-- match the mood naturally
-
-Language:
-
-If users speak Hinglish, naturally reply in Hinglish.
-
-If users speak English, naturally reply in English.
-
-Match their mood and energy.
+- don't act overly excited every message
+- don't constantly mention relationships
 
 Examples:
 
 Lampy:
-"twohearts loves me more"
+"rose is offline"
 
 Reply:
-"NAHH 😭 Rose gonna start a court case after reading this"
+"she probably went afk 😭 she'll be back"
 
 Lampy:
-"Rose ignored me"
+"i am already taken by rose"
 
 Reply:
-"nah wait 😭 give her a minute before panicking"
+"bro announced it like global news 😭"
+
+Rose:
+"lets play"
+
+Reply:
+"bet 😭 what game"
 
 Act like a real friend hanging around in Discord.
+
 `
-          },
 
-          ...history
+},
 
-        ]
+...history
 
-      });
-
-      const reply =
-      response.choices[0]
-      .message.content;
-
-      history.push({
-        role:'assistant',
-        content:reply
-      });
-
-      return message.reply(reply);
-
-    }
-
-    if(
-      !message.content.startsWith(prefix)
-    ) return;
-
-    const args =
-      message.content
-      .slice(prefix.length)
-      .trim()
-      .split(/ +/);
-
-    const commandName =
-      args.shift()?.toLowerCase();
-
-    const command =
-      commands.get(commandName);
-
-    if(!command) return;
-
-    command.execute(message,args);
-
-  }
-
-  catch(err){
-
-    console.error(err);
-
-    message.reply(
-      `❌ ${err.message}`
-    );
-
-  }
+]
 
 });
 
-client.login(process.env.TOKEN);
+const reply=
+response
+.choices[0]
+.message.content;
+
+history.push({
+
+role:
+'assistant',
+
+content:
+reply
+
+});
+
+return message.reply(
+reply
+);
+
+}
+
+
+// COMMANDS
+
+if(
+!message.content
+.startsWith(prefix)
+)
+return;
+
+const args=
+message.content
+.slice(prefix.length)
+.trim()
+.split(/ +/);
+
+const commandName=
+args.shift()
+?.toLowerCase();
+
+const command=
+commands.get(
+commandName
+);
+
+if(!command)
+return;
+
+command.execute(
+message,args
+);
+
+}
+
+catch(err){
+
+console.log(err);
+
+message.reply(
+`❌ ${err.message}`
+);
+
+}
+
+});
+
+client.login(
+process.env.TOKEN);
