@@ -52,7 +52,7 @@ module.exports = {
       const response =
       await openai.chat.completions.create({
 
-        model:'google/gemini-2.5-flash-image-preview',
+        model:'google/gemini-2.0-flash-exp',
 
         messages:[
           {
