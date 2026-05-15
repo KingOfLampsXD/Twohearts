@@ -44,12 +44,12 @@ client.on('messageCreate', async (message) => {
       await message.channel.sendTyping();
 
       const response = await openai.chat.completions.create({
-        model: 'meta-llama/llama-3.1-8b-instruct:free',
+        model: 'openai/gpt-oss-20b:free',
         messages: [
           {
             role: 'system',
             content:
-              'You are Twohearts, a smart, friendly Discord AI assistant.'
+              'You are Twohearts, a friendly Discord AI assistant. Keep responses natural and helpful.'
           },
           {
             role: 'user',
