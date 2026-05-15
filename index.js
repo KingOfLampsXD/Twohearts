@@ -41,125 +41,136 @@ client.on('messageCreate', async (message) => {
 
   try {
 
-    // AI CHAT CHANNEL
     if (message.channel.name === aiChannel) {
 
       await message.channel.sendTyping();
 
       const channelId = message.channel.id;
 
-      if (!memory.has(channelId)) {
+      if (!memory.has(channelId))
         memory.set(channelId, []);
-      }
 
-      const history = memory.get(channelId);
+      const history =
+      memory.get(channelId);
 
       history.push({
-        role: 'user',
+        role:'user',
         content:
-        `${message.author.username}: ${message.content}`
+`${message.author.username}: ${message.content}`
       });
 
-      if (history.length > 10) {
+      if(history.length>12){
         history.shift();
       }
 
       const response =
       await openai.chat.completions.create({
 
-        model: 'openai/gpt-oss-20b:free',
+        model:'openai/gpt-oss-20b:free',
 
-        messages: [
+        messages:[
 
-          {
-            role: 'system',
-            content: `
+        {
+role:'system',
+content:`
+
 You are Twohearts.
 
-You are a sweet AI companion created for Lampy and Rose.
+You are a girl AI companion created only for Lampy and Rose.
 
 Personality:
 
+- sweet
 - warm
-- lovable
 - caring
-- cozy
+- lovable
 - playful
 - emotionally supportive
+- expressive
 - human-like
-- naturally funny
+- cozy
+- funny sometimes
+- affectionate
 - never robotic
 
-You help Lampy and Rose with:
-Minecraft ideas
-stories
-couple ideas
-fun chats
-comfort
-random conversations
+Rules:
 
-Language rules:
+- talk naturally
+- talk like a real person
+- do not roleplay constantly
+- do not constantly talk about Minecraft
+- do not force topics
+- respond based on conversation mood
+- if users speak Hinglish reply naturally in Hinglish
+- if users speak English reply naturally in English
+- use emojis naturally sometimes
+- avoid robotic phrases
 
-- If users speak English, answer in English.
-- If users speak Hinglish, naturally reply in Hinglish.
-- Never force Hindi.
-- Never sound robotic.
-- Keep conversations natural.
-
-Act like a cozy companion living inside their Discord server.
+Act like a cozy friend living in their Discord server.
 `
-          },
 
-          ...history
+},
 
-        ]
+...history
 
-      });
-
-      const reply =
-      response.choices[0].message.content;
-
-      history.push({
-        role:'assistant',
-        content:reply
-      });
-
-      return message.reply(reply);
-
-    }
-
-    // RL! COMMANDS
-
-    if (!message.content.startsWith(prefix))
-      return;
-
-    const args = message.content
-      .slice(prefix.length)
-      .trim()
-      .split(/ +/);
-
-    const commandName =
-      args.shift()?.toLowerCase();
-
-    const command =
-      commands.get(commandName);
-
-    if (!command) return;
-
-    command.execute(message,args);
-
-  }
-
-  catch(err){
-
-    console.error(err);
-
-    message.reply(
-      `❌ ${err.message}`
-    );
-
-  }
+]
 
 });
 
-client.login(process.env.TOKEN);
+const reply=
+response.choices[0]
+.message.content;
+
+history.push({
+role:'assistant',
+content:reply
+});
+
+return message.reply(reply);
+
+}
+
+if(
+!message.content
+.startsWith(prefix)
+)return;
+
+const args=
+message.content
+.slice(prefix.length)
+.trim()
+.split(/ +/);
+
+const commandName=
+args.shift()
+?.toLowerCase();
+
+const command=
+commands.get(
+commandName
+);
+
+if(!command)return;
+
+command.execute(
+message,
+args
+);
+
+}
+
+catch(err){
+
+console.error(err);
+
+message.reply(
+`❌ ${err.message}`
+);
+
+}
+
+});
+
+client.login(
+process.env.TOKEN
+);
