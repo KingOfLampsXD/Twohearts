@@ -1,3 +1,5 @@
+const axios = require('axios');
+
 module.exports = {
   name: 'image',
 
@@ -11,58 +13,42 @@ module.exports = {
       );
     }
 
-    const attachments =
-      [...message.attachments.values()];
-
-    if (attachments.length === 0) {
-      return message.reply(
-        '📸 Upload image(s) too!'
-      );
-    }
-
     await message.channel.sendTyping();
-
-    const imageUrls =
-      attachments.map(file => file.url);
 
     const loading =
       await message.reply(
-`💕 Twohearts is working...
-
-🖼 Images: ${imageUrls.length}
-
-✍ Prompt:
-${prompt}
-
-⏳ Processing...`
+        '🎨 Twohearts is creating your image...'
       );
 
     try {
 
-      console.log('Images:', imageUrls);
+      const encodedPrompt =
+      encodeURIComponent(prompt);
 
-      await new Promise(
-        r => setTimeout(r, 4000)
-      );
+      const imageUrl =
+`https://image.pollinations.ai/prompt/${encodedPrompt}`;
 
-      await loading.edit(
-`✨ Received successfully!
+      await message.channel.send({
 
-🖼 Images:
-${imageUrls.length}
+        content:
+`💕 Made by Twohearts\nPrompt: ${prompt}`,
 
-✍ Prompt:
-${prompt}
+        files:[
+          imageUrl
+        ]
 
-💖 Ready for image backend`
-      );
+      });
 
-    } catch(err){
+      loading.delete();
+
+    }
+
+    catch(err){
 
       console.error(err);
 
       loading.edit(
-        `❌ ${err.message}`
+`❌ ${err.message}`
       );
 
     }
