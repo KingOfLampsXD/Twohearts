@@ -9,61 +9,33 @@ module.exports = {
 
       const prompt = args.join(' ');
 
-      if (!prompt) {
+      if (!prompt)
         return message.reply(
-          '✨ Use: RL!image <prompt>'
+          'Use: RL!image <prompt>'
         );
-      }
 
-      await message.channel.sendTyping();
-
-      const loading =
+      const msg =
       await message.reply(
-        '🎨 Twohearts is drawing...'
+        '🎨 Twohearts drawing...'
       );
 
-      const imageURL =
-`https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}`;
-
-      const response =
-      await axios.get(
-        imageURL,
-        {
-          responseType:'arraybuffer',
-          timeout:30000
-        }
-      );
-
-      const buffer =
-      Buffer.from(response.data);
+      const url =
+`https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=1024`;
 
       await message.channel.send({
-
         content:
-`💕 Prompt: ${prompt}`,
-
-        files:[
-          {
-            attachment:buffer,
-            name:'twohearts.png'
-          }
-        ]
-
+`💕 ${prompt}`,
+        files:[url]
       });
 
-      await loading.delete();
+      await msg.delete();
 
-    }
+    } catch(err){
 
-    catch(err){
-
-      console.log(
-        'IMAGE ERROR:',
-        err
-      );
+      console.log(err);
 
       message.reply(
-        '❌ Image failed'
+        '❌ image failed'
       );
 
     }
