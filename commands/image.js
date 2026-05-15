@@ -1,54 +1,56 @@
-const axios = require('axios');
+const axios = require("axios");
 
 module.exports = {
-  name: 'image',
+  name: "image",
 
   async execute(message, args) {
 
-    const prompt = args.join(' ');
+    const prompt = args.join(" ");
 
-    if (!prompt) {
+    if (!prompt)
       return message.reply(
-        '✨ Usage: RL!image <prompt>'
+        "Use: RL!image <prompt>"
       );
-    }
 
-    await message.channel.sendTyping();
-
-    const loading =
-      await message.reply(
-        '🎨 Twohearts is creating your image...'
-      );
+    const msg = await message.reply(
+      "🎨 Twohearts is drawing..."
+    );
 
     try {
 
-      const encodedPrompt =
-      encodeURIComponent(prompt);
+      const url =
+`https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}`;
 
-      const imageUrl =
-`https://image.pollinations.ai/prompt/${encodedPrompt}`;
+      const response =
+      await axios.get(url,{
+        responseType:"arraybuffer"
+      });
+
+      const buffer =
+      Buffer.from(response.data);
 
       await message.channel.send({
 
         content:
-`💕 Made by Twohearts\nPrompt: ${prompt}`,
+`💕 Twohearts made this\nPrompt: ${prompt}`,
 
         files:[
-          imageUrl
+          {
+            attachment:buffer,
+            name:"twohearts.png"
+          }
         ]
 
       });
 
-      loading.delete();
+      msg.delete();
 
-    }
+    } catch(err){
 
-    catch(err){
+      console.log(err);
 
-      console.error(err);
-
-      loading.edit(
-`❌ ${err.message}`
+      msg.edit(
+        "❌ Image generation failed"
       );
 
     }
