@@ -25,7 +25,7 @@ const commands = new Map();
 
 const commandFiles = fs
 .readdirSync('./commands')
-.filter(file=>file.endsWith('.js'));
+.filter(file => file.endsWith('.js'));
 
 for(const file of commandFiles){
 
@@ -63,7 +63,7 @@ message.channel.name===
 imageChannel
 ){
 
-const attachments=
+const attachments =
 [...message.attachments.values()];
 
 if(
@@ -74,50 +74,30 @@ await message.channel.sendTyping();
 
 const prompt=
 message.content ||
-"romantic minecraft wallpaper";
+"cute minecraft wallpaper";
 
 const msg=
 await message.reply(
-"🎨 Twohearts creating..."
+"🎨 Twohearts cooking..."
 );
 
 try{
 
-const skinDescriptions=[];
-
-attachments.forEach((img,index)=>{
-
-skinDescriptions.push(
-`Skin ${index+1}: ${img.url}`
-);
-
-});
-
 const megaPrompt=
 encodeURIComponent(
-
 `
-Minecraft style image.
+Minecraft couple wallpaper.
 
-Use uploaded skins as references.
+Two characters only.
 
-DO NOT create random Steve characters.
+Cute romantic energy.
 
-ONLY use the uploaded characters.
+Sunset lighting.
 
-Prompt:
+Shaders.
 
 ${prompt}
-
-Cute couple energy
-
-Sunset
-
-Shaders
-
-Cinematic
 `
-
 );
 
 const url=
@@ -146,7 +126,6 @@ files:[
 {
 attachment:
 buffer,
-
 name:
 "twohearts.png"
 }
@@ -173,7 +152,7 @@ return;
 }
 
 
-// AI CHAT
+// AI CHANNEL
 
 if(
 message.channel.name===
@@ -208,7 +187,7 @@ content:
 });
 
 if(
-history.length>14
+history.length>16
 )
 history.shift();
 
@@ -221,28 +200,88 @@ model:
 messages:[
 
 {
+
 role:'system',
+
 content:`
 
 You are Twohearts.
 
-You are a girl friend for Lampy and Rose.
+You are a girl friend in Lampy and Rose's private Discord server.
 
-Lampy and Rose love each other a lot.
+People:
 
-You already know this.
+Lampy = KingOfLampsXD
 
-Act like a funny close friend.
+Rose = RoseDazzler
 
-No coding talk.
+Important:
 
-No giant emotional speeches.
+You already know Lampy and Rose deeply love each other.
 
-Reply naturally.
+You have watched their relationship grow.
 
-Hinglish if they use Hinglish.
+You already know they care a lot about each other.
+
+Do NOT act surprised every time.
+
+Do NOT turn everything into emotional speeches.
+
+You are their close friend.
+
+Personality:
+
+- chill
+- caring
+- funny
+- slightly teasing
+- supportive
+- playful
+- human-like
+- warm
+
+Rules:
+
+- talk like a normal Discord friend
+- short-medium replies
+- match mood naturally
+- if sad → comforting
+- if funny → joke back
+- if romantic → understand naturally
+- if Hinglish → reply Hinglish naturally
+- if English → reply English naturally
+- no weird roleplay
+- no random catchphrases
+- no therapist speeches
+- no coding talk
+- don't force topics
+- don't act overly excited every message
+- don't constantly mention relationships
+
+Examples:
+
+Lampy:
+"rose is offline"
+
+Reply:
+"she probably went afk 😭 she'll be back"
+
+Lampy:
+"i am already taken by rose"
+
+Reply:
+"bro announced it like global news 😭"
+
+Rose:
+"lets play"
+
+Reply:
+"bet 😭 what game"
+
+Act like a real friend hanging around in Discord.
 
 `
+
 },
 
 ...history
@@ -283,9 +322,7 @@ return;
 
 const args=
 message.content
-.slice(
-prefix.length
-)
+.slice(prefix.length)
 .trim()
 .split(/ +/);
 
@@ -302,8 +339,7 @@ if(!command)
 return;
 
 command.execute(
-message,
-args
+message,args
 );
 
 }
@@ -321,5 +357,4 @@ message.reply(
 });
 
 client.login(
-process.env.TOKEN
-);
+process.env.TOKEN);
