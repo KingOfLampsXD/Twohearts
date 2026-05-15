@@ -9,7 +9,7 @@ module.exports = {
 
     if (!prompt) {
       return message.reply(
-        '✨ Usage: RL!image <what you want>'
+        '✨ Usage: RL!image <prompt>'
       );
     }
 
@@ -25,9 +25,7 @@ module.exports = {
     await message.channel.sendTyping();
 
     const imageUrls =
-      attachments.map(
-        file => file.url
-      );
+      attachments.map(file => file.url);
 
     const loading =
       await message.reply(
@@ -38,43 +36,34 @@ module.exports = {
 ✍ Prompt:
 ${prompt}
 
-⏳ Please wait...`
+⏳ Generating...`
       );
 
     try {
 
-      console.log(
-        'Images:',
-        imageUrls
-      );
-
-      // future image API spot
+      // placeholder for actual image service
+      console.log(imageUrls);
 
       await new Promise(
-        r=>setTimeout(r,5000)
+        r => setTimeout(r, 8000)
       );
 
-      loading.edit(
+      await loading.edit(
+`✨ Generation system ready
 
-`💕 Twohearts received everything
-
-🖼 Images:
-${imageUrls.length}
-
-✍ Prompt:
+Prompt:
 ${prompt}
 
-✨ Ready for image generation`
+Images received:
+${imageUrls.length}`
       );
 
-    }
-
-    catch(err){
+    } catch(err){
 
       console.error(err);
 
       loading.edit(
-`❌ ${err.message}`
+        `❌ ${err.message}`
       );
 
     }
