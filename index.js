@@ -9,7 +9,7 @@ const client = new Client({
   ]
 });
 
-const prefix = '!';
+const prefix = 'RL!';
 
 const commands = new Map();
 
@@ -22,7 +22,7 @@ for (const file of commandFiles) {
   commands.set(command.name, command);
 }
 
-client.once('ready', () => {
+client.once('clientReady', () => {
   console.log(`Logged in as ${client.user.tag}`);
 });
 
@@ -36,13 +36,18 @@ client.on('messageCreate', message => {
     .trim()
     .split(/ +/);
 
-  const commandName = args.shift().toLowerCase();
+  const commandName = args.shift()?.toLowerCase();
 
   const command = commands.get(commandName);
 
   if (!command) return;
 
-  command.execute(message, args);
+  try {
+    command.execute(message, args);
+  } catch (error) {
+    console.error(error);
+    message.reply('Command error :(');
+  }
 });
 
 client.login(process.env.TOKEN);
