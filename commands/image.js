@@ -14,7 +14,7 @@ module.exports = {
 
     if (!prompt) {
       return message.reply(
-        'Usage: RL!image <prompt>'
+        'Use: RL!image <prompt>'
       );
     }
 
@@ -30,57 +30,63 @@ module.exports = {
 
     try {
 
-      const content = [
-        {
-          type: "text",
-          text:
-`Create an image: ${prompt}`
-        }
-      ];
+      const content = [];
 
-      // add uploaded images
-      for (const file of attachments) {
+      content.push({
+        type:'text',
+        text:
+`Create a beautiful image: ${prompt}`
+      });
+
+      for(const file of attachments){
+
         content.push({
-          type: "image_url",
-          image_url: {
-            url: file.url
+          type:'image_url',
+          image_url:{
+            url:file.url
           }
         });
+
       }
 
       const response =
       await openai.chat.completions.create({
 
-        model:
-        "google/gemini-2.5-flash-image",
+        model:'google/gemini-2.5-flash-image-preview',
 
-        modalities: ["image","text"],
-
-        messages: [
+        messages:[
           {
-            role: "user",
+            role:'user',
             content
           }
         ]
 
       });
 
-      const image =
-      response.choices?.[0]
-      ?.message?.images?.[0];
+      console.log(
+        JSON.stringify(response,null,2)
+      );
 
-      if (!image) {
+      const image =
+      response?.choices?.[0]
+      ?.message?.images?.[0]
+      ?.image_url?.url;
+
+      if(!image){
+
         return loading.edit(
-          '❌ No image returned'
+'❌ No image returned.\nCheck Railway logs.'
         );
+
       }
 
       await message.channel.send({
+
         content:
-        '💕 Made by Twohearts',
-        files: [
-          image.image_url.url
-        ]
+'💕 Made by Twohearts',
+
+        files:[image]
+
       });
 
       loading.delete();
@@ -90,7 +96,7 @@ module.exports = {
       console.error(err);
 
       loading.edit(
-        `❌ ${err.message}`
+`❌ ${err.message}`
       );
 
     }
