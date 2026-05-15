@@ -1,104 +1,325 @@
-const axios = require("axios");
+const { Client, GatewayIntentBits } = require('discord.js');
+const fs = require('fs');
+const OpenAI = require('openai');
+const axios = require('axios');
 
-module.exports = {
-  name: "image",
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent
+  ]
+});
 
-  async execute(message, args) {
+const openai = new OpenAI({
+  apiKey: process.env.OPENROUTER_API_KEY,
+  baseURL: 'https://openrouter.ai/api/v1'
+});
 
-    const prompt = args.join(" ");
+const prefix = 'RL!';
+const aiChannel = 'twohearts-ai';
+const imageChannel = 'image';
 
-    if (!prompt)
-      return message.reply(
-        "Use: RL!image <prompt>"
-      );
+const memory = new Map();
+const commands = new Map();
 
-    const attachments =
-      [...message.attachments.values()];
+const commandFiles = fs
+.readdirSync('./commands')
+.filter(file=>file.endsWith('.js'));
 
-    if(attachments.length < 2){
-      return message.reply(
-        "📸 Upload both skins too!"
-      );
-    }
+for(const file of commandFiles){
 
-    await message.channel.sendTyping();
+const command =
+require(`./commands/${file}`);
 
-    const skin1 =
-      attachments[0].url;
+commands.set(
+command.name,
+command
+);
 
-    const skin2 =
-      attachments[1].url;
+}
 
-    const msg =
-      await message.reply(
-        "🎨 Twohearts is drawing Lampy + Rose..."
-      );
+client.once(
+'clientReady',
+()=>{
+console.log(
+`Logged in as ${client.user.tag}`
+);
+});
 
-    try {
+client.on(
+'messageCreate',
+async(message)=>{
 
-      const megaPrompt = encodeURIComponent(
+if(message.author.bot)
+return;
 
-`Use these two Minecraft skins as references:
+try{
 
-Skin 1:
-${skin1}
+// IMAGE CHANNEL
 
-Skin 2:
-${skin2}
+if(
+message.channel.name===
+imageChannel
+){
 
-VERY IMPORTANT:
+const attachments=
+[...message.attachments.values()];
 
-Keep the exact characters.
+if(
+attachments.length>0
+){
 
-Do not create random Steve characters.
+await message.channel.sendTyping();
+
+const prompt=
+message.content ||
+"romantic minecraft wallpaper";
+
+const msg=
+await message.reply(
+"🎨 Twohearts creating..."
+);
+
+try{
+
+const skinDescriptions=[];
+
+attachments.forEach((img,index)=>{
+
+skinDescriptions.push(
+`Skin ${index+1}: ${img.url}`
+);
+
+});
+
+const megaPrompt=
+encodeURIComponent(
+
+`
+Minecraft style image.
+
+Use uploaded skins as references.
+
+DO NOT create random Steve characters.
+
+ONLY use the uploaded characters.
+
+Prompt:
 
 ${prompt}
 
-Minecraft style.
-Cute couple wallpaper.
-Sunset lighting.
-High detail.`
+Cute couple energy
 
-      );
+Sunset
 
-      const url =
+Shaders
+
+Cinematic
+`
+
+);
+
+const url=
 `https://image.pollinations.ai/prompt/${megaPrompt}`;
 
-      const response =
-      await axios.get(url,{
-        responseType:"arraybuffer"
-      });
+const response=
+await axios.get(
+url,
+{
+responseType:
+'arraybuffer'
+}
+);
 
-      const buffer =
-      Buffer.from(response.data);
+const buffer=
+Buffer.from(
+response.data
+);
 
-      await message.channel.send({
+await message.channel.send({
 
-        content:
-"💕 Lampy + Rose wallpaper",
+content:
+"💕 Twohearts made this",
 
-        files:[
-          {
-            attachment:buffer,
-            name:"twohearts.png"
-          }
-        ]
+files:[
+{
+attachment:
+buffer,
 
-      });
+name:
+"twohearts.png"
+}
+]
 
-      msg.delete();
+});
 
-    }
+msg.delete();
 
-    catch(err){
+}catch(err){
 
-      console.log(err);
+console.log(err);
 
-      msg.edit(
-        "❌ generation failed"
-      );
+msg.edit(
+"❌ image failed"
+);
 
-    }
+}
 
-  }
-};
+}
+
+return;
+
+}
+
+
+// AI CHAT
+
+if(
+message.channel.name===
+aiChannel
+){
+
+await message.channel.sendTyping();
+
+const channelId=
+message.channel.id;
+
+if(
+!memory.has(channelId)
+)
+memory.set(
+channelId,
+[]
+);
+
+const history=
+memory.get(
+channelId
+);
+
+history.push({
+
+role:'user',
+
+content:
+`${message.author.username}: ${message.content}`
+
+});
+
+if(
+history.length>14
+)
+history.shift();
+
+const response=
+await openai.chat.completions.create({
+
+model:
+'openai/gpt-oss-20b:free',
+
+messages:[
+
+{
+role:'system',
+content:`
+
+You are Twohearts.
+
+You are a girl friend for Lampy and Rose.
+
+Lampy and Rose love each other a lot.
+
+You already know this.
+
+Act like a funny close friend.
+
+No coding talk.
+
+No giant emotional speeches.
+
+Reply naturally.
+
+Hinglish if they use Hinglish.
+
+`
+},
+
+...history
+
+]
+
+});
+
+const reply=
+response
+.choices[0]
+.message.content;
+
+history.push({
+
+role:
+'assistant',
+
+content:
+reply
+
+});
+
+return message.reply(
+reply
+);
+
+}
+
+
+// COMMANDS
+
+if(
+!message.content
+.startsWith(prefix)
+)
+return;
+
+const args=
+message.content
+.slice(
+prefix.length
+)
+.trim()
+.split(/ +/);
+
+const commandName=
+args.shift()
+?.toLowerCase();
+
+const command=
+commands.get(
+commandName
+);
+
+if(!command)
+return;
+
+command.execute(
+message,
+args
+);
+
+}
+
+catch(err){
+
+console.log(err);
+
+message.reply(
+`❌ ${err.message}`
+);
+
+}
+
+});
+
+client.login(
+process.env.TOKEN
+);
