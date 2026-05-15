@@ -1,10 +1,3 @@
-const OpenAI = require('openai');
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENROUTER_API_KEY,
-  baseURL: 'https://openrouter.ai/api/v1'
-});
-
 module.exports = {
   name: 'image',
 
@@ -14,89 +7,62 @@ module.exports = {
 
     if (!prompt) {
       return message.reply(
-        'Use: RL!image <prompt>'
+        '✨ Usage: RL!image <prompt>'
       );
     }
 
     const attachments =
       [...message.attachments.values()];
 
+    if (attachments.length === 0) {
+      return message.reply(
+        '📸 Upload image(s) too!'
+      );
+    }
+
     await message.channel.sendTyping();
+
+    const imageUrls =
+      attachments.map(file => file.url);
 
     const loading =
       await message.reply(
-        '🎨 Twohearts is generating...'
+`💕 Twohearts is working...
+
+🖼 Images: ${imageUrls.length}
+
+✍ Prompt:
+${prompt}
+
+⏳ Processing...`
       );
 
     try {
 
-      const content = [];
+      console.log('Images:', imageUrls);
 
-      content.push({
-        type:'text',
-        text:
-`Create a beautiful image: ${prompt}`
-      });
-
-      for(const file of attachments){
-
-        content.push({
-          type:'image_url',
-          image_url:{
-            url:file.url
-          }
-        });
-
-      }
-
-      const response =
-      await openai.chat.completions.create({
-
-        model:'google/gemini-2.0-flash-exp',
-
-        messages:[
-          {
-            role:'user',
-            content
-          }
-        ]
-
-      });
-
-      console.log(
-        JSON.stringify(response,null,2)
+      await new Promise(
+        r => setTimeout(r, 4000)
       );
 
-      const image =
-      response?.choices?.[0]
-      ?.message?.images?.[0]
-      ?.image_url?.url;
+      await loading.edit(
+`✨ Received successfully!
 
-      if(!image){
+🖼 Images:
+${imageUrls.length}
 
-        return loading.edit(
-'❌ No image returned.\nCheck Railway logs.'
-        );
+✍ Prompt:
+${prompt}
 
-      }
-
-      await message.channel.send({
-
-        content:
-'💕 Made by Twohearts',
-
-        files:[image]
-
-      });
-
-      loading.delete();
+💖 Ready for image backend`
+      );
 
     } catch(err){
 
       console.error(err);
 
       loading.edit(
-`❌ ${err.message}`
+        `❌ ${err.message}`
       );
 
     }
