@@ -15,23 +15,23 @@ const openai = new OpenAI({
   baseURL: 'https://openrouter.ai/api/v1'
 });
 
-const prefix = 'RL!';
-const aiChannel = 'twohearts-ai';
+const prefix='RL!';
+const aiChannel='twohearts-ai';
 
-const memory = new Map();
-const commands = new Map();
+const memory=new Map();
+const commands=new Map();
 
-try {
+try{
 
-const files = fs
+const files=fs
 .readdirSync('./commands')
-.filter(file => file.endsWith('.js'));
+.filter(file=>file.endsWith('.js'));
 
 for(const file of files){
 
 try{
 
-const command =
+const command=
 require(`./commands/${file}`);
 
 if(command?.name){
@@ -90,7 +90,7 @@ message.channel.name===aiChannel
 
 await message.channel.sendTyping();
 
-const id =
+const id=
 message.channel.id;
 
 if(
@@ -104,72 +104,29 @@ id,
 
 }
 
-const history =
+const history=
 memory.get(id);
-
-
-// image / screenshot support
-
-const attachments =
-[...message.attachments.values()];
-
-let userContent=[];
-
-if(message.content){
-
-userContent.push({
-
-type:'text',
-
-text:
-`${message.author.username}: ${message.content}`
-
-});
-
-}
-
-for(const file of attachments){
-
-if(
-file.contentType?.startsWith('image')
-){
-
-userContent.push({
-
-type:'image_url',
-
-image_url:{
-url:file.url
-}
-
-});
-
-}
-
-}
 
 history.push({
 
 role:'user',
 
 content:
-userContent.length
-? userContent
-: `${message.author.username}: ${message.content}`
+`${message.author.username}: ${message.content}`
 
 });
 
-if(history.length > 12){
+if(history.length>12){
 
 history.shift();
 
 }
 
-const response =
+const response=
 await openai.chat.completions.create({
 
 model:
-'qwen/qwen2.5-vl-72b-instruct'
+'openai/gpt-oss-20b:free',
 
 messages:[
 
@@ -181,20 +138,18 @@ content:`
 
 You are Twohearts.
 
-You are a close friend in Lampy and Rose's private Discord server.
+You are Lampy and Rose's close friend.
 
 People:
 
 KingOfLampsXD = Lampy
 RoseDazzler = Rose
 
-You already know Lampy and Rose very well.
+You already know Lampy and Rose deeply love each other.
 
-You already know they deeply love each other.
+You already know them very well.
 
 Do not act surprised.
-
-You have been around a long time.
 
 Personality:
 
@@ -213,15 +168,11 @@ Rules:
 - don't narrate thoughts
 - don't explain yourself
 - don't make random stories
-- don't invent situations
 - don't act like customer support
-- don't say "User wants"
-- don't use weird internet slang
 - don't overuse emojis
-- don't become overly dramatic
-- if Hinglish -> reply naturally in Hinglish
-- if English -> reply naturally in English
-- match the mood
+- if Hinglish -> Hinglish
+- if English -> English
+- match mood
 
 Examples:
 
@@ -255,7 +206,7 @@ Act normal.
 
 });
 
-const reply =
+const reply=
 response
 .choices[0]
 .message.content;
@@ -278,17 +229,17 @@ if(
 )
 return;
 
-const args =
+const args=
 message.content
 .slice(prefix.length)
 .trim()
 .split(/ +/);
 
-const commandName =
+const commandName=
 args.shift()
 ?.toLowerCase();
 
-const command =
+const command=
 commands.get(commandName);
 
 if(!command)
