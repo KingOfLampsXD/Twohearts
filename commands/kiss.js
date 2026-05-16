@@ -6,29 +6,56 @@ async execute(message,args){
 
 const kisses=[
 
-"💋 Lampy stole a kiss and ran 😭",
+"💋 Lampy gently kissed Rose and forgot the rest of the world existed 😭",
 
-"😭 Rose used surprise kiss attack. Critical hit.",
+"💕 Rose looked at Lampy for 2 seconds and bro instantly lost focus",
 
-"💕 Twohearts witnessed illegal levels of cuteness",
+"✨ Twohearts detected dangerous levels of couple energy",
 
-"✨ Relationship EXP +25",
+"🫠 Rose used forehead kiss. Lampy emotional damage taken: 999",
 
-"🫠 bro the romance stats just went up"
+"😭 Lampy unlocked soft mode again",
+
+"💖 The server witnessed a legendary kiss moment",
+
+"🌙 Late-night kiss energy just hit different",
+
+"💞 Relationship XP +500",
+
+"🥹 Rose smiled... Lampy.exe stopped responding",
+
+"💫 Twohearts: okay bro save some romance for tomorrow",
+
+"💕 Lampy kissed Rose like she was his favorite place",
+
+"😭 even the Discord server got shy",
+
+"🌸 Softest moment unlocked",
+
+"💖 Rose activated maximum heart-stealing powers",
+
+"🫂 Couple buff increased",
+
+"✨ Bro really looked at her like she was home",
+
+"😭 Emotional support kiss deployed",
+
+"💞 Love meter accidentally broke",
+
+"🌙 Midnight vibes + kiss combo unlocked",
+
+"🥹 Twohearts witnessed cinema-level romance"
 
 ];
 
 const random=
-
 kisses[
 Math.floor(
 Math.random()*kisses.length
 )
 ];
 
-message.reply(
-random
-);
+message.reply(random);
 
 }
 
