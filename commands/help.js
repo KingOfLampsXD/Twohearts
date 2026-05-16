@@ -9,7 +9,7 @@ async execute(message){
 const embed=
 new EmbedBuilder()
 
-.setColor('#ff7eb6')
+.setColor('#ff6fae')
 
 .setTitle(
 '💞 Twohearts — Lampy & Rose World ✨'
@@ -19,21 +19,22 @@ new EmbedBuilder()
 
 `Welcome home 😭
 
-Twohearts is your tiny third-wheel bestie living inside the server.
+Twohearts isn't just a bot anymore.
 
-Built for:
-💖 Love
-🎮 Chaos
-🌙 Late nights
-🫂 Soft moments
-✨ Lampy + Rose forever`
+🫂 Third-wheel bestie
+💖 Relationship chaos manager
+🌙 Late-night companion
+📸 Memory keeper
+💌 Secret letter goblin
+
+Lampy ❤️ Rose forever`
 
 )
 
 .addFields(
 
 {
-name:'🫂 Love Stuff',
+name:'🫂 Love Commands',
 value:
 '`RL!hug`\n`RL!kiss`\n`RL!ship`\n`RL!soulmate`',
 inline:true
@@ -47,23 +48,37 @@ inline:true
 },
 
 {
-name:'🌙 Cozy Mode',
+name:'🌙 Cozy Stuff',
 value:
 '`RL!night`\n`RL!date`\n`RL!scenario`\n`RL!fortune`',
 inline:true
 },
 
 {
-name:'🎲 Fun Box',
+name:'💌 Real Systems',
 value:
-'`RL!fun spin`\n`RL!fun gift`\n`RL!fun casino`\n`RL!fun vc`\n`RL!fun coin`\n`RL!fun dice`\n`RL!fun dailyhug`',
+'`RL!fun letter <msg>`\n`RL!fun openletter`\n`RL!fun memory <memory>`\n`RL!fun memories`',
 inline:false
+},
+
+{
+name:'❤️ Couple Tracker',
+value:
+'`RL!fun streak`\n`RL!fun mission`\n`RL!fun sleep`',
+inline:true
+},
+
+{
+name:'🗳 Together Mode',
+value:
+'`RL!fun vote minecraft | roblox`\n`RL!fun vote movie | game`\n`RL!fun vote vc | minecraft`',
+inline:true
 },
 
 {
 name:'🤍 AI Friend',
 value:
-'Chat in `#twohearts-ai`\nTwohearts hangs around and reacts naturally 😭',
+'Chat inside `#twohearts-ai`\nTwohearts hangs out naturally 😭',
 inline:false
 }
 
@@ -76,7 +91,7 @@ message.guild.iconURL()
 .setFooter({
 
 text:
-'Lampy ❤️ Rose • Distance tried, love said nope 😭'
+'Distance tried • Love said nope 😭💞'
 
 })
 
