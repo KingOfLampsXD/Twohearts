@@ -1,6 +1,10 @@
-const { EmbedBuilder } = require("discord.js");
+const {
+AttachmentBuilder
+} = require("discord.js");
 
-module.exports = {
+const Canvas=require("canvas");
+
+module.exports={
 
 name:"lovescene",
 
@@ -9,50 +13,242 @@ async execute(message,args){
 const mode=
 args[0]?.toLowerCase() || "cherry";
 
-const scenes={
+try{
 
-cherry:
-"https://mc-heads.net/body/KingOfLampsXD/left",
+await message.reply(
+"okay okay 😭 making Lampy + Rose cute again..."
+);
 
-night:
-"https://mc-heads.net/body/RoseDazzler/right",
+const canvas=
+Canvas.createCanvas(
+1200,
+700
+);
 
-campfire:
-"https://mc-heads.net/combo/KingOfLampsXD/RoseDazzler",
+const ctx=
+canvas.getContext("2d");
 
-snow:
-"https://mc-heads.net/combo/KingOfLampsXD/RoseDazzler",
 
-sunset:
-"https://mc-heads.net/combo/KingOfLampsXD/RoseDazzler"
+// themes
+
+const themes={
+
+cherry:[
+"#ffb6d9",
+"#ffd8ee"
+],
+
+night:[
+"#1b2566",
+"#0d122e"
+],
+
+campfire:[
+"#ffb66d",
+"#7d4533"
+],
+
+snow:[
+"#daf5ff",
+"#ffffff"
+],
+
+sunset:[
+"#ff9966",
+"#ff5ebc"
+]
 
 };
 
-const embed=
-new EmbedBuilder()
+const colors=
+themes[mode]
+||
+themes.cherry;
 
-.setColor("#ff7eb6")
 
-.setTitle("💞 Lampy + Rose")
+// background
 
-.setDescription(
-"okay okay 😭 made you two again"
-)
+const gradient=
+ctx.createLinearGradient(
+0,
+0,
+1200,
+700
+);
 
-.setImage(
-scenes[mode] ||
-scenes.cherry
-)
+gradient.addColorStop(
+0,
+colors[0]
+);
 
-.setFooter({
-text:"Twohearts third-wheeling again 😭"
+gradient.addColorStop(
+1,
+colors[1]
+);
+
+ctx.fillStyle=
+gradient;
+
+ctx.fillRect(
+0,
+0,
+1200,
+700
+);
+
+
+// decorations
+
+ctx.font=
+"35px Arial";
+
+for(let i=0;i<35;i++){
+
+ctx.fillText(
+"💖",
+Math.random()*1150,
+Math.random()*500
+);
+
+}
+
+
+if(mode==="night"){
+
+ctx.font=
+"100px Arial";
+
+ctx.fillText(
+"🌙",
+920,
+130
+);
+
+}
+
+
+if(mode==="campfire"){
+
+ctx.font=
+"90px Arial";
+
+ctx.fillText(
+"🔥",
+550,
+500
+);
+
+}
+
+
+if(mode==="snow"){
+
+for(let i=0;i<50;i++){
+
+ctx.beginPath();
+
+ctx.arc(
+Math.random()*1200,
+Math.random()*700,
+3,
+0,
+Math.PI*2
+);
+
+ctx.fillStyle=
+"white";
+
+ctx.fill();
+
+}
+
+}
+
+
+// load uploaded skins
+
+const lamp=
+await Canvas.loadImage(
+"./skins/lampy.png"
+);
+
+const rose=
+await Canvas.loadImage(
+"./skins/rose.png"
+);
+
+
+// place skins
+
+ctx.drawImage(
+lamp,
+310,
+180,
+250,
+350
+);
+
+ctx.drawImage(
+rose,
+650,
+180,
+250,
+350
+);
+
+
+// title
+
+ctx.fillStyle=
+"white";
+
+ctx.font=
+"52px Arial";
+
+ctx.fillText(
+"Lampy ❤️ Rose",
+390,
+620
+);
+
+
+ctx.font=
+"30px Arial";
+
+ctx.fillText(
+"made by Twohearts 😭",
+450,
+660
+);
+
+
+// send image
+
+const attachment=
+new AttachmentBuilder(
+canvas.toBuffer(),
+{
+name:"twohearts.png"
+}
+);
+
+return message.channel.send({
+
+files:[
+attachment
+]
+
 });
 
-return message.reply({
+}catch(err){
 
-embeds:[embed]
+console.log(err);
 
-});
+return message.reply(
+"😭 scene machine exploded"
+);
+
+}
 
 }
 
