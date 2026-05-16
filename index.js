@@ -169,7 +169,7 @@ const response =
 await openai.chat.completions.create({
 
 model:
-'google/gemini-2.5-flash-preview',
+'google/gemini-flash-1.5',
 
 messages:[
 
