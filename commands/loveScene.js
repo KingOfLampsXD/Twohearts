@@ -1,13 +1,10 @@
-const {
-AttachmentBuilder
-} = require("discord.js");
-
+const { AttachmentBuilder } = require("discord.js");
 const Canvas = require("canvas");
 const axios = require("axios");
 
 module.exports = {
 
-name:"loveScene",
+name:"lovescene",
 
 async execute(message,args){
 
@@ -17,9 +14,11 @@ args[0]?.toLowerCase() || "cherry";
 const lampy="KingOfLampsXD";
 const rose="RoseDazzler";
 
+
 async function getUUID(username){
 
-const data=await axios.get(
+const data=
+await axios.get(
 `https://api.mojang.com/users/profiles/minecraft/${username}`
 );
 
@@ -27,11 +26,13 @@ return data.data.id;
 
 }
 
+
 try{
 
 await message.reply(
-"okay okay give me a sec 😭 cooking something cute..."
+"okay okay give me a sec 😭 cooking Lampy + Rose..."
 );
+
 
 const lampUUID=
 await getUUID(lampy);
@@ -50,25 +51,41 @@ const ctx=
 canvas.getContext("2d");
 
 
-// backgrounds
+// scene colors
 
-const gradients={
+const themes={
 
-cherry:["#ffb6d9","#ffd8ee"],
+cherry:[
+"#ffb6d9",
+"#ffd8ee"
+],
 
-night:["#1f2c77","#0d1033"],
+night:[
+"#1d2f70",
+"#0f132f"
+],
 
-snow:["#d7f2ff","#ffffff"],
+snow:[
+"#d9f3ff",
+"#ffffff"
+],
 
-sunset:["#ff9f7a","#ff5ebc"],
+sunset:[
+"#ff9966",
+"#ff5ebc"
+],
 
-campfire:["#ffb66d","#7d4333"]
+campfire:[
+"#ffb66d",
+"#7a4533"
+]
 
 };
 
+
 const selected=
-gradients[mode]||
-gradients.cherry;
+themes[mode] ||
+themes.cherry;
 
 
 const gradient=
@@ -105,7 +122,7 @@ ctx.fillRect(
 ctx.font=
 "35px Arial";
 
-for(let i=0;i<30;i++){
+for(let i=0;i<25;i++){
 
 ctx.fillText(
 "💖",
@@ -116,16 +133,17 @@ Math.random()*500
 }
 
 
-// moon
+// night moon
 
 if(mode==="night"){
 
-ctx.font="100px Arial";
+ctx.font=
+"100px Arial";
 
 ctx.fillText(
 "🌙",
-900,
-150
+920,
+130
 );
 
 }
@@ -135,7 +153,7 @@ ctx.fillText(
 
 if(mode==="snow"){
 
-for(let i=0;i<50;i++){
+for(let i=0;i<60;i++){
 
 ctx.beginPath();
 
@@ -159,7 +177,7 @@ ctx.fill();
 
 // skins
 
-const lamp=
+const lampSkin=
 await Canvas.loadImage(
 `https://crafatar.com/renders/body/${lampUUID}?overlay`
 );
@@ -173,7 +191,7 @@ await Canvas.loadImage(
 // place skins
 
 ctx.drawImage(
-lamp,
+lampSkin,
 300,
 220,
 220,
@@ -189,11 +207,13 @@ roseSkin,
 );
 
 
-ctx.font=
-"50px Arial";
+// title
 
 ctx.fillStyle=
 "white";
+
+ctx.font=
+"50px Arial";
 
 ctx.fillText(
 "Lampy ❤️ Rose",
@@ -203,11 +223,11 @@ ctx.fillText(
 
 
 ctx.font=
-"30px Arial";
+"28px Arial";
 
 ctx.fillText(
-"Twohearts made this 😭",
-450,
+"made by Twohearts 😭",
+460,
 665
 );
 
