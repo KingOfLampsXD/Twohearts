@@ -1,43 +1,81 @@
-module.exports = {
+const OpenAI = require('openai');
+
+const openai = new OpenAI({
+ apiKey: process.env.OPENROUTER_API_KEY,
+ baseURL:'https://openrouter.ai/api/v1'
+});
+
+module.exports={
 
 name:'wouldyou',
 
 async execute(message){
 
-const questions=[
+try{
 
-"🌙 Stay up all night talking or watch a sunset together?",
+await message.channel.sendTyping();
 
-"🎮 Minecraft date or movie night together?",
+const response=
+await openai.chat.completions.create({
 
-"🍕 Share one pizza forever or one blanket forever 😭",
+model:
+'openai/gpt-oss-20b:free',
 
-"💞 Cuddles every day or forehead kisses every day?",
+messages:[
 
-"🌧️ Rain walk together or late-night call together?",
+{
 
-"✨ Hold hands all day or hug every hour?",
+role:'system',
 
-"😭 Spam each other all day or surprise texts?",
+content:`
 
-"🎧 Listen to music together or game together?",
+Create ONE romantic couple
+would-you-rather question
+for Lampy and Rose.
 
-"🌸 Morning goodnight texts— wait 😭 morning GOOD MORNING texts or midnight talks?",
+Rules:
 
-"🫂 One giant hug or 100 tiny hugs?"
+- cute
+- funny
+- cozy
+- relationship themed
+- one sentence only
+- never repeat
+- no weird roleplay
+- no cringe
+- no explicit content
 
-];
+Examples:
 
-const random=
-questions[
-Math.floor(
-Math.random()*questions.length
-)
-];
+Would you rather cuddle all night or watch stars together?
+
+Would you rather have a Minecraft date or movie night?
+
+`
+
+}
+
+]
+
+});
+
+const question=
+
+response
+.choices[0]
+.message.content;
 
 message.reply(
-random
+`🌙 ${question}`
 );
+
+}catch{
+
+message.reply(
+'😭 Twohearts forgot the question'
+);
+
+}
 
 }
 
