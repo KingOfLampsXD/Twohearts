@@ -1,7 +1,13 @@
-const { EmbedBuilder } = require("discord.js");
+const {
+AttachmentBuilder
+} = require("discord.js");
 
-module.exports = {
-name: "love",
+const Canvas=require("canvas");
+const axios=require("axios");
+
+module.exports={
+
+name:"love",
 
 async execute(message,args){
 
@@ -9,101 +15,128 @@ const sub=args[0]?.toLowerCase();
 
 if(sub!=="scene") return;
 
+const scene=args[1]?.toLowerCase()||"cherry";
+
 const lampy="KingOfLampsXD";
 const rose="RoseDazzler";
 
-const scene=args[1]?.toLowerCase() || "random";
+const backgrounds={
 
-const scenes={
+cherry:"https://i.imgur.com/yvVpHbl.jpg",
 
-cherry:{
-msg:"okay okay give me a sec 😭 making Lampy and Rose under cherry blossoms",
-bg:"🌸 moonlit cherry blossom date"
-},
+night:"https://i.imgur.com/JlQ6b8D.jpg",
 
-night:{
-msg:"late-night mode activated 😭",
-bg:"🌙 stars + lantern date"
-},
+campfire:"https://i.imgur.com/FR6RMwQ.jpg",
 
-campfire:{
-msg:"cozy mode incoming",
-bg:"🔥 campfire cuddle scene"
-},
+snow:"https://i.imgur.com/FJmXQhF.jpg",
 
-wedding:{
-msg:"WAIT HOLD ON 😭",
-bg:"💍 minecraft wedding"
-},
-
-cabin:{
-msg:"tiny cozy cabin loading",
-bg:"🏡 wooden cabin date"
-},
-
-snow:{
-msg:"cold outside warm inside energy",
-bg:"❄️ snowy cuddle scene"
-}
+sunset:"https://i.imgur.com/55Y7WSM.jpg"
 
 };
 
-const keys=Object.keys(scenes);
+const bg=
+backgrounds[scene]||
+backgrounds.cherry;
 
-const picked=
-scene==="random"
-? scenes[keys[Math.floor(Math.random()*keys.length)]]
-: scenes[scene] || scenes.cherry;
+const canvas=
+Canvas.createCanvas(
+1200,
+675
+);
+
+const ctx=
+canvas.getContext("2d");
 
 
-// skin body renders
-const lampySkin=
-`https://crafatar.com/renders/body/${lampy}?overlay`;
+// background
 
-const roseSkin=
-`https://crafatar.com/renders/body/${rose}?overlay`;
+const bgData=
+await axios.get(bg,{
+responseType:"arraybuffer"
+});
 
-const embed=
-new EmbedBuilder()
+const background=
+await Canvas.loadImage(
+Buffer.from(bgData.data)
+);
 
-.setColor("#ff7eb6")
+ctx.drawImage(
+background,
+0,
+0,
+1200,
+675
+);
 
-.setTitle("💞 Twohearts Scene")
 
-.setDescription(
+// minecraft renders
 
-`${picked.msg}
+const lampImg=
+await Canvas.loadImage(
+`https://crafatar.com/renders/body/${lampy}?overlay`
+);
 
-${picked.bg}
+const roseImg=
+await Canvas.loadImage(
+`https://crafatar.com/renders/body/${rose}?overlay`
+);
 
-Lampy ❤️ Rose forever`
-)
 
-.addFields(
+// place characters
+
+ctx.drawImage(
+lampImg,
+340,
+240,
+220,
+320
+);
+
+ctx.drawImage(
+roseImg,
+620,
+240,
+220,
+320
+);
+
+
+// hearts
+
+ctx.font="60px Arial";
+
+ctx.fillText(
+"💞",
+560,
+230
+);
+
+ctx.font="32px Arial";
+
+ctx.fillText(
+"Lampy ❤️ Rose",
+430,
+620
+);
+
+
+const attachment=
+new AttachmentBuilder(
+canvas.toBuffer(),
 {
-name:"🧸 Lampy",
-value:`${lampy}`,
-inline:true
-},
-{
-name:"🌸 Rose",
-value:`${rose}`,
-inline:true
+name:"twohearts.png"
 }
-)
-
-.setImage(
-`https://mc-heads.net/banner/${lampy}/${rose}`
-)
-
-.setFooter({
-text:"Twohearts has seen this love arc before 😭"
-})
-
-.setTimestamp();
+);
 
 message.reply({
-embeds:[embed]
+
+content:
+"okay okay give me a sec 😭",
+
+files:[
+attachment
+]
+
 });
 
 }
