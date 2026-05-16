@@ -29,7 +29,7 @@ role:'system',
 
 content:`
 
-Create ONE fun couple guessing game for Lampy and Rose.
+Create ONE guessing game for Lampy and Rose.
 
 Context:
 
@@ -37,24 +37,23 @@ Lampy and Rose are a long-distance married couple.
 
 Rules:
 
-- ask ONE guessing challenge
-- make one person guess something about the other
-- cute
-- funny sometimes
+- ONE sentence only
+- make it about Discord, Minecraft, Roblox, calls, memes, habits, late-night chats
+- NEVER invent fake memories
+- NEVER invent trips or events
+- NEVER make random stories
+- cute and funny
 - realistic
-- one sentence only
-- not cringe
-- no explicit content
 
 Examples:
 
-Rose, guess Lampy's comfort food 😭
+Lampy, guess Rose's most-used cute word 😭
 
-Lampy, guess Rose's dream Minecraft date.
+Rose, guess what game Lampy would instantly say yes to.
 
-Rose, guess what Lampy would buy with unlimited robux 💀
+Lampy, guess who gets clingier late at night 💀
 
-Lampy, guess Rose's emergency comfort activity.
+Rose, guess Lampy's emergency comfort activity 😭
 
 `
 
