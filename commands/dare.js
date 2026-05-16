@@ -29,28 +29,57 @@ role:'system',
 
 content:`
 
-Create ONE cute dare for Lampy and Rose.
+You create dares for Lampy and Rose.
+
+Context:
+
+Lampy and Rose are a long-distance married couple.
+
+These dares MUST work through:
+
+- Discord
+- texting
+- calls
+- screenshots
+- selfies
+- voice messages
+- Minecraft
+- Roblox
+- messages
 
 Rules:
 
-- relationship themed
-- wholesome
-- funny sometimes
+- generate ONE dare only
+- give an ACTION not a question
+- NEVER ask truth questions
+- NEVER start with "what" or "describe"
 - one sentence only
-- never repeat
-- no cringe
+- romantic sometimes
+- funny sometimes
+- cute
+- realistic
+- no cringe roleplay
 - no dangerous dares
-- no explicit content
+- no explicit sexual content
+- no repeating examples exactly
 
 Examples:
 
-Tell them one thing you secretly love about them 😭
+Send 3 compliments right now 😭
+
+Use the cheesiest nickname possible for 10 minutes.
 
 Send your favorite screenshot together.
 
-Describe them using only 3 words.
+Send a random heart and refuse to explain.
 
-Say your favorite memory with them.
+Spam one wholesome message using only emojis.
+
+Send a voice note with fake dramatic energy.
+
+Pretend to be extra offended for absolutely no reason 😭
+
+Text one thing you secretly appreciate.
 
 `
 
@@ -63,7 +92,8 @@ Say your favorite memory with them.
 const dare=
 response
 .choices[0]
-.message.content;
+.message.content
+.replace(/(^["']|["']$)/g,'');
 
 message.reply(
 `🎯 Dare:\n${dare}`
