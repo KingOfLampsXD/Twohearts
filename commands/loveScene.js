@@ -1,24 +1,11 @@
+if(sub==="scene"){
+
 const {
 AttachmentBuilder
 }=require("discord.js");
 
 const Canvas=require("canvas");
 const axios=require("axios");
-
-module.exports={
-
-name:"love",
-
-async execute(message,args){
-
-const sub=args[0]?.toLowerCase();
-
-if(sub!=="scene") return;
-
-const scene=args[1]?.toLowerCase()||"cherry";
-
-const lampy="KingOfLampsXD";
-const rose="RoseDazzler";
 
 async function getUUID(username){
 
@@ -32,8 +19,11 @@ return data.data.id;
 
 try{
 
+const lampy="KingOfLampsXD";
+const rose="RoseDazzler";
+
 await message.reply(
-"okay okay give me a sec 😭 cooking Lampy + Rose..."
+"okay okay give me a sec 😭"
 );
 
 const lampUUID=
@@ -51,18 +41,10 @@ Canvas.createCanvas(
 const ctx=
 canvas.getContext("2d");
 
-
-// background gradient
-
 const gradient=
 ctx.createLinearGradient(
-0,
-0,
-1200,
-700
+0,0,1200,700
 );
-
-if(scene==="cherry"){
 
 gradient.addColorStop(
 0,
@@ -71,38 +53,8 @@ gradient.addColorStop(
 
 gradient.addColorStop(
 1,
-"#ffcce8"
+"#ffd8ee"
 );
-
-}
-
-else if(scene==="night"){
-
-gradient.addColorStop(
-0,
-"#1e2a78"
-);
-
-gradient.addColorStop(
-1,
-"#0f1029"
-);
-
-}
-
-else{
-
-gradient.addColorStop(
-0,
-"#ffb6d9"
-);
-
-gradient.addColorStop(
-1,
-"#ffd5ef"
-);
-
-}
 
 ctx.fillStyle=gradient;
 
@@ -113,12 +65,9 @@ ctx.fillRect(
 700
 );
 
-
-// heart particles
-
-ctx.font="40px Arial";
-
 for(let i=0;i<25;i++){
+
+ctx.font="35px Arial";
 
 ctx.fillText(
 "💖",
@@ -127,9 +76,6 @@ Math.random()*500
 );
 
 }
-
-
-// skins
 
 const lampSkin=
 await Canvas.loadImage(
@@ -141,31 +87,27 @@ await Canvas.loadImage(
 `https://crafatar.com/renders/body/${roseUUID}?overlay`
 );
 
-
-// draw
-
 ctx.drawImage(
 lampSkin,
 300,
-210,
+220,
 230,
-340
+330
 );
 
 ctx.drawImage(
 roseSkin,
 650,
-210,
+220,
 230,
-340
+330
 );
-
 
 ctx.font="50px Arial";
 
 ctx.fillText(
 "Lampy ❤️ Rose",
-410,
+420,
 620
 );
 
@@ -173,15 +115,13 @@ const attachment=
 new AttachmentBuilder(
 canvas.toBuffer(),
 {
-name:"twohearts.png"
+name:"love.png"
 }
 );
 
-message.channel.send({
+return message.channel.send({
 
-files:[
-attachment
-]
+files:[attachment]
 
 });
 
@@ -189,11 +129,10 @@ attachment
 
 console.log(err);
 
-message.reply(
-"NOOO 😭 scene machine exploded"
+return message.reply(
+"😭 scene machine exploded"
 );
 
 }
 
-}
 }
