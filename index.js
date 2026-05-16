@@ -169,7 +169,7 @@ const response =
 await openai.chat.completions.create({
 
 model:
-'google/gemma-3-27b-it'
+'qwen/qwen2.5-vl-72b-instruct'
 
 messages:[
 
