@@ -12,19 +12,19 @@ args[0]?.toLowerCase() || "cherry";
 const prompts={
 
 cherry:
-`Minecraft style romantic artwork of Lampy and Rose using matching cute Minecraft skins, sitting together under glowing cherry blossom trees at sunset, lanterns, heart particles, cozy atmosphere, cinematic, adorable couple energy`,
+`Minecraft style romantic artwork of Lampy and Rose together under glowing cherry blossom trees, lanterns, pink petals, heart particles, cozy atmosphere, cinematic, cute couple energy`,
 
 campfire:
-`Minecraft style Lampy and Rose sitting together beside a warm campfire at night, cozy romantic scene, lanterns and stars`,
+`Minecraft style Lampy and Rose beside a warm campfire at night, stars above, cozy romantic energy`,
 
 night:
-`Minecraft style Lampy and Rose together under moonlight and stars, cute romantic atmosphere`,
+`Minecraft style Lampy and Rose together under moonlight and stars, romantic and cute`,
 
 snow:
-`Minecraft style Lampy and Rose holding hands in a snowy village, cozy winter romantic energy`,
+`Minecraft style Lampy and Rose holding hands in a snowy village, cozy winter atmosphere`,
 
 sunset:
-`Minecraft style Lampy and Rose watching sunset beside a lake, cinematic romantic atmosphere`
+`Minecraft style Lampy and Rose watching sunset together near a lake, cinematic romance`
 
 };
 
@@ -34,8 +34,6 @@ await message.reply(
 "okay okay 😭 making you two adorable again..."
 );
 
-
-// create image job
 
 const create=
 await axios.post(
@@ -77,12 +75,12 @@ Authorization:
 const id=
 create.data.id;
 
-
-// wait
-
 let image=null;
 
-for(let i=0;i<15;i++){
+
+// poll replicate
+
+for(let i=0;i<20;i++){
 
 await new Promise(
 r=>setTimeout(r,2000)
@@ -106,6 +104,7 @@ Authorization:
 
 );
 
+
 if(
 poll.data.status==="succeeded"
 ){
@@ -114,6 +113,18 @@ image=
 poll.data.output?.[0];
 
 break;
+
+}
+
+
+if(
+poll.data.status==="failed"
+){
+
+throw new Error(
+poll.data.error ||
+"prediction failed"
+);
 
 }
 
@@ -135,8 +146,7 @@ content:
 "Twohearts cooked 😭💞",
 
 files:[
-image
-]
+image]
 
 });
 
@@ -144,11 +154,23 @@ image
 }catch(err){
 
 console.log(
+"LOVE SCENE ERROR:"
+);
+
+console.log(
 err.response?.data || err
 );
 
+
 return message.reply(
-"😭 scene machine exploded"
+
+`😭 ${
+err.response?.data?.detail ||
+err.response?.data?.error ||
+err.message ||
+"something exploded"
+}`
+
 );
 
 }
