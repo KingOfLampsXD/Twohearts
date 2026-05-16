@@ -9,26 +9,38 @@ async execute(message,args){
 const scene=
 args[0]?.toLowerCase() || "cherry";
 
-const prompts={
+
+const scenes={
 
 cherry:
-`Minecraft style romantic artwork of Lampy and Rose together under glowing cherry blossom trees, lanterns, pink petals, heart particles, cozy atmosphere, cinematic, cute couple energy`,
+`Minecraft style romantic artwork of Lampy and Rose together beneath glowing cherry blossom trees, pink petals floating, lanterns, heart particles, sunset lighting, cozy atmosphere, adorable couple energy, cinematic`,
 
 campfire:
-`Minecraft style Lampy and Rose beside a warm campfire at night, stars above, cozy romantic energy`,
+`Minecraft style Lampy and Rose sitting beside a warm campfire at night, stars above, lanterns, cozy romantic scene`,
 
 night:
-`Minecraft style Lampy and Rose together under moonlight and stars, romantic and cute`,
+`Minecraft style Lampy and Rose together under moonlight and stars, dreamy romantic atmosphere`,
 
 snow:
-`Minecraft style Lampy and Rose holding hands in a snowy village, cozy winter atmosphere`,
+`Minecraft style Lampy and Rose holding hands in a snowy village at night, cozy winter romance`,
 
 sunset:
-`Minecraft style Lampy and Rose watching sunset together near a lake, cinematic romance`
+`Minecraft style Lampy and Rose sitting near a lake watching sunset together, cinematic romantic energy`
 
 };
 
+
 try{
+
+
+if(!process.env.REPLICATE_API_TOKEN){
+
+return message.reply(
+"😭 replicate token missing"
+);
+
+}
+
 
 await message.reply(
 "okay okay 😭 making you two adorable again..."
@@ -48,8 +60,11 @@ version:
 input:{
 
 prompt:
-prompts[scene] ||
-prompts.cherry
+scenes[scene] ||
+scenes.cherry,
+
+aspect_ratio:
+"16:9"
 
 }
 
@@ -72,24 +87,25 @@ Authorization:
 );
 
 
-const id=
+const predictionId=
 create.data.id;
 
 let image=null;
 
 
-// poll replicate
+// wait for generation
 
-for(let i=0;i<20;i++){
+for(let i=0;i<25;i++){
 
 await new Promise(
 r=>setTimeout(r,2000)
 );
 
+
 const poll=
 await axios.get(
 
-`https://api.replicate.com/v1/predictions/${id}`,
+`https://api.replicate.com/v1/predictions/${predictionId}`,
 
 {
 
@@ -123,7 +139,7 @@ poll.data.status==="failed"
 
 throw new Error(
 poll.data.error ||
-"prediction failed"
+"generation failed"
 );
 
 }
@@ -134,7 +150,7 @@ poll.data.error ||
 if(!image){
 
 return message.reply(
-"😭 image took too long"
+"😭 image took too long try again"
 );
 
 }
@@ -143,10 +159,11 @@ return message.reply(
 return message.channel.send({
 
 content:
-"Twohearts cooked 😭💞",
+"Twohearts cooked something 😭💞",
 
 files:[
-image]
+image
+]
 
 });
 
@@ -168,7 +185,7 @@ return message.reply(
 err.response?.data?.detail ||
 err.response?.data?.error ||
 err.message ||
-"something exploded"
+"something broke"
 }`
 
 );
