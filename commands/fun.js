@@ -1,3 +1,5 @@
+const fs=require('fs');
+
 module.exports={
 
 name:'fun',
@@ -7,19 +9,217 @@ async execute(message,args){
 const mode=
 args[0]?.toLowerCase();
 
+const text=
+args.slice(1).join(' ');
+
+const file=
+'coupledata.json';
+
+let data={
+
+letters:[],
+memories:[],
+streak:0
+
+};
+
+if(fs.existsSync(file)){
+
+data=
+JSON.parse(
+fs.readFileSync(
+file
+)
+);
+
+}
+
 if(!mode){
 
 return message.reply(
 
-`💞 Twohearts Fun
+`💞 Twohearts Systems
 
-RL!fun spin
-RL!fun gift
-RL!fun casino
-RL!fun vc
-RL!fun coin
-RL!fun dice
-RL!fun dailyhug
+💌 RL!fun letter <msg>
+💌 RL!fun openletter
+
+📸 RL!fun memory <memory>
+📸 RL!fun memories
+
+❤️ RL!fun streak
+
+🎯 RL!fun mission
+
+🗳 RL!fun vote option1 | option2
+
+🌙 RL!fun sleep
+
+✨ Twohearts remembers things now 😭`
+
+);
+
+}
+
+
+/* LETTER */
+
+if(mode==="letter"){
+
+if(!text){
+
+return message.reply(
+'😭 write a message'
+);
+
+}
+
+data.letters.push({
+
+author:
+message.author.username,
+
+text
+
+});
+
+fs.writeFileSync(
+file,
+JSON.stringify(
+data,
+null,
+2
+)
+);
+
+return message.reply(
+'💌 secret letter saved'
+);
+
+}
+
+
+/* OPEN LETTER */
+
+if(mode==="openletter"){
+
+if(
+data.letters.length===0
+){
+
+return message.reply(
+'😭 no letters'
+);
+
+}
+
+const random=
+
+data.letters[
+Math.floor(
+Math.random()*
+data.letters.length
+)
+];
+
+return message.reply(
+
+`💌 Letter
+
+From:
+${random.author}
+
+"${random.text}"`
+
+);
+
+}
+
+
+/* MEMORY */
+
+if(mode==="memory"){
+
+if(!text){
+
+return message.reply(
+'😭 add memory'
+);
+
+}
+
+data.memories.push(text);
+
+fs.writeFileSync(
+file,
+JSON.stringify(
+data,
+null,
+2
+)
+);
+
+return message.reply(
+'📸 memory saved 😭'
+);
+
+}
+
+
+/* MEMORIES */
+
+if(mode==="memories"){
+
+if(
+data.memories.length===0
+){
+
+return message.reply(
+'😭 empty memories'
+);
+
+}
+
+return message.reply(
+
+`📸 Memories
+
+${
+data.memories
+.map(
+(x,i)=>
+`${i+1}. ${x}`
+)
+.join('\n')
+}`
+
+);
+
+}
+
+
+/* STREAK */
+
+if(
+mode==="streak"
+){
+
+data.streak++;
+
+fs.writeFileSync(
+file,
+JSON.stringify(
+data,
+null,
+2
+)
+);
+
+return message.reply(
+
+`❤️ Lampy + Rose
+
+Love streak:
+${data.streak}
 
 😭`
 
@@ -28,65 +228,37 @@ RL!fun dailyhug
 }
 
 
-// SPIN
+/* MISSION */
 
-if(mode==="spin"){
+if(
+mode==="mission"
+){
 
-const stuff=[
+const missions=[
 
-"🫂 Hug attack unlocked",
+"Send one compliment 😭",
 
-"💖 Send 2 compliments",
+"Send one meme",
 
-"🎮 Rose picks tonight's game",
+"Join VC for 2 mins",
 
-"🌙 Late-night VC time",
+"Say one wholesome thing",
 
-"😭 Lampy owes affection tax",
+"Play together later",
 
-"💕 Send random heart and disappear"
-
-];
-
-return message.reply(
-
-stuff[
-Math.floor(
-Math.random()*stuff.length
-)
-]
-
-);
-
-}
-
-
-// GIFT
-
-if(mode==="gift"){
-
-const gifts=[
-
-"🌸 Flowers",
-
-"🧸 Giant teddy",
-
-"🍫 Chocolate",
-
-"💌 Love letter",
-
-"🎮 Minecraft date ticket",
-
-"💖 999 affection points"
+"Spam hearts 💖"
 
 ];
 
 return message.reply(
 
-`🎁 Gift:\n${
-gifts[
+`🎯 Mission
+
+${
+missions[
 Math.floor(
-Math.random()*gifts.length
+Math.random()*
+missions.length
 )
 ]
 }`
@@ -96,153 +268,68 @@ Math.random()*gifts.length
 }
 
 
-// CASINO
-
-if(mode==="casino"){
-
-const emojis=[
-
-"❤️",
-"💖",
-"✨",
-"😭"
-
-];
-
-const a=
-emojis[
-Math.floor(Math.random()*4)
-];
-
-const b=
-emojis[
-Math.floor(Math.random()*4)
-];
-
-const c=
-emojis[
-Math.floor(Math.random()*4)
-];
-
-let result=
-'try again 😭';
+/* SLEEP */
 
 if(
-a===b &&
-b===c
+mode==="sleep"
 ){
-
-result=
-'JACKPOT +999 LOVE';
-
-}
 
 return message.reply(
 
-`🎰
+`🌙
 
-${a} ${b} ${c}
+${message.author.username}
 
-${result}`
+said goodnight first 😭💞`
 
 );
 
 }
 
 
-// COIN
+/* VOTE */
 
 if(
-mode==="coin"
+mode==="vote"
+){
+
+const split=
+text.split('|');
+
+if(
+split.length<2
 ){
 
 return message.reply(
-
-Math.random()<0.5
-? "🪙 Heads"
-:"🪙 Tails"
-
+'example:\nRL!fun vote minecraft | roblox'
 );
 
 }
 
+const msg=
+await message.channel.send(
 
-// DICE
+`🗳 Vote
 
-if(
-mode==="dice"
-){
+1️⃣ ${
+split[0]
+}
 
-return message.reply(
-
-`🎲 ${
-1+
-Math.floor(
-Math.random()*6
-)
+2️⃣ ${
+split[1]
 }`
 
 );
 
-}
-
-
-// DAILYHUG
-
-if(
-mode==="dailyhug"
-){
-
-const hugs=[
-
-"🫂 Rose hugged Lampy so hard emotional damage reached 999",
-
-"💕 cuddle combo activated",
-
-"😭 affection increased"
-
-];
-
-return message.reply(
-
-hugs[
-Math.floor(
-Math.random()*hugs.length
-)
-]
-
+await msg.react(
+'1️⃣'
 );
 
-}
-
-
-// VC
-
-if(
-mode==="vc"
-){
-
-const vc=[
-
-"🌙 Join VC and only talk with emojis",
-
-"🎮 Play one random game",
-
-"💖 Say one wholesome thing",
-
-"😭 communicate with memes only"
-
-];
-
-return message.reply(
-
-vc[
-Math.floor(
-Math.random()*vc.length
-)
-]
-
+await msg.react(
+'2️⃣'
 );
+
+return;
 
 }
 
