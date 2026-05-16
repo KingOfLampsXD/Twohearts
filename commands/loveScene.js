@@ -12,24 +12,21 @@ args[0]?.toLowerCase() || "cherry";
 const scenes={
 
 cherry:
-"https://minecraft.wiki/images/Cherry_Grove.png",
+"https://mc-heads.net/body/KingOfLampsXD/left",
 
 night:
-"https://wallpapercave.com/wp/wp9766325.jpg",
-
-snow:
-"https://wallpapercave.com/wp/wp7487156.jpg",
-
-sunset:
-"https://wallpapercave.com/wp/wp9024134.jpg",
+"https://mc-heads.net/body/RoseDazzler/right",
 
 campfire:
-"https://wallpapercave.com/wp/wp11067583.jpg"
+"https://mc-heads.net/combo/KingOfLampsXD/RoseDazzler",
+
+snow:
+"https://mc-heads.net/combo/KingOfLampsXD/RoseDazzler",
+
+sunset:
+"https://mc-heads.net/combo/KingOfLampsXD/RoseDazzler"
 
 };
-
-const image=
-scenes[mode] || scenes.cherry;
 
 const embed=
 new EmbedBuilder()
@@ -39,17 +36,22 @@ new EmbedBuilder()
 .setTitle("💞 Lampy + Rose")
 
 .setDescription(
-"okay okay 😭 tiny romantic scene delivered"
+"okay okay 😭 made you two again"
 )
 
-.setImage(image)
+.setImage(
+scenes[mode] ||
+scenes.cherry
+)
 
 .setFooter({
 text:"Twohearts third-wheeling again 😭"
 });
 
 return message.reply({
+
 embeds:[embed]
+
 });
 
 }
