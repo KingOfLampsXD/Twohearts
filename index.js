@@ -169,7 +169,7 @@ const response =
 await openai.chat.completions.create({
 
 model:
-'google/gemini-flash-1.5',
+'meta-llama/llama-3.2-11b-vision-instruct:free',
 
 messages:[
 
