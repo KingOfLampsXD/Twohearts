@@ -1,8 +1,4 @@
-const {
-AttachmentBuilder
-} = require("discord.js");
-
-const Canvas=require("canvas");
+const axios=require("axios");
 
 module.exports={
 
@@ -10,239 +6,96 @@ name:"lovescene",
 
 async execute(message,args){
 
-const mode=
+const scene=
 args[0]?.toLowerCase() || "cherry";
+
+const prompts={
+
+cherry:
+`Minecraft style romantic artwork of Lampy and Rose using their saved skins, sitting together under glowing cherry blossom trees at sunset, lanterns, heart particles, cozy atmosphere, cute couple energy, cinematic`,
+
+night:
+`Minecraft style Lampy and Rose on a moonlit hill with stars and lanterns, romantic and cozy`,
+
+campfire:
+`Minecraft style Lampy and Rose sitting together beside a warm campfire at night, cute romantic energy`,
+
+snow:
+`Minecraft style Lampy and Rose in a snowy village together holding hands, cozy winter atmosphere`,
+
+sunset:
+`Minecraft style Lampy and Rose watching sunset together near a lake, cinematic romantic atmosphere`
+
+};
 
 try{
 
 await message.reply(
-"okay okay 😭 making Lampy + Rose cute again..."
+"okay okay 😭 making you two adorable again..."
 );
 
-const canvas=
-Canvas.createCanvas(
-1200,
-700
-);
-
-const ctx=
-canvas.getContext("2d");
+const prompt=
+prompts[scene] ||
+prompts.cherry;
 
 
-// themes
+// OpenRouter image request
 
-const themes={
+const response=
+await axios.post(
 
-cherry:[
-"#ffb6d9",
-"#ffd8ee"
-],
+"https://openrouter.ai/api/v1/chat/completions",
 
-night:[
-"#1b2566",
-"#0d122e"
-],
-
-campfire:[
-"#ffb66d",
-"#7d4533"
-],
-
-snow:[
-"#daf5ff",
-"#ffffff"
-],
-
-sunset:[
-"#ff9966",
-"#ff5ebc"
-]
-
-};
-
-const colors=
-themes[mode]
-||
-themes.cherry;
-
-
-// background
-
-const gradient=
-ctx.createLinearGradient(
-0,
-0,
-1200,
-700
-);
-
-gradient.addColorStop(
-0,
-colors[0]
-);
-
-gradient.addColorStop(
-1,
-colors[1]
-);
-
-ctx.fillStyle=
-gradient;
-
-ctx.fillRect(
-0,
-0,
-1200,
-700
-);
-
-
-// decorations
-
-ctx.font=
-"35px Arial";
-
-for(let i=0;i<35;i++){
-
-ctx.fillText(
-"💖",
-Math.random()*1150,
-Math.random()*500
-);
-
-}
-
-
-if(mode==="night"){
-
-ctx.font=
-"100px Arial";
-
-ctx.fillText(
-"🌙",
-920,
-130
-);
-
-}
-
-
-if(mode==="campfire"){
-
-ctx.font=
-"90px Arial";
-
-ctx.fillText(
-"🔥",
-550,
-500
-);
-
-}
-
-
-if(mode==="snow"){
-
-for(let i=0;i<50;i++){
-
-ctx.beginPath();
-
-ctx.arc(
-Math.random()*1200,
-Math.random()*700,
-3,
-0,
-Math.PI*2
-);
-
-ctx.fillStyle=
-"white";
-
-ctx.fill();
-
-}
-
-}
-
-
-// load uploaded skins
-
-const lamp=
-await Canvas.loadImage(
-"./skins/lampy.png"
-);
-
-const rose=
-await Canvas.loadImage(
-"./skins/rose.png"
-);
-
-
-// place skins
-
-ctx.drawImage(
-lamp,
-310,
-180,
-250,
-350
-);
-
-ctx.drawImage(
-rose,
-650,
-180,
-250,
-350
-);
-
-
-// title
-
-ctx.fillStyle=
-"white";
-
-ctx.font=
-"52px Arial";
-
-ctx.fillText(
-"Lampy ❤️ Rose",
-390,
-620
-);
-
-
-ctx.font=
-"30px Arial";
-
-ctx.fillText(
-"made by Twohearts 😭",
-450,
-660
-);
-
-
-// send image
-
-const attachment=
-new AttachmentBuilder(
-canvas.toBuffer(),
 {
-name:"twohearts.png"
+
+model:
+"google/gemini-2.5-flash-image-preview",
+
+messages:[
+
+{
+
+role:"user",
+
+content:prompt
+
 }
-);
 
-return message.channel.send({
-
-files:[
-attachment
 ]
 
-});
+},
+
+{
+
+headers:{
+
+Authorization:
+`Bearer ${process.env.OPENROUTER_API_KEY}`,
+
+"Content-Type":
+"application/json"
+
+}
+
+}
+
+);
+
+const data=
+response.data;
+
+console.log(data);
+
+
+// temporary fallback
+
+return message.channel.send(
+"😭 image generation connected — now check Railway logs"
+);
 
 }catch(err){
 
-console.log(err);
+console.log(err.response?.data || err);
 
 return message.reply(
 "😭 scene machine exploded"
