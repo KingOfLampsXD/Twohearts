@@ -57,7 +57,7 @@ inline:true
 {
 name:'💌 Fun Systems',
 value:
-'`RL!fun letter <msg>`\n`RL!fun openletter`\n`RL!fun memory <memory>`\n`RL!fun memories`\n`RL!fun streak`\n`RL!fun mission`\n`RL!fun sleep`\n`RL!fun vote a | b`',
+'`RL!fun letter <msg>`\n`RL!fun openletter`\n`RL!fun memory <memory>`\n`RL!fun memories`\n`RL!fun streak`\n`RL!fun mission`\n`RL!fun sleep`\n`RL!fun vote a | b`\n`RL!fun stare`\n`RL!fun choose`\n`RL!fun memorytest`\n`RL!fun thisorthat`\n`RL!fun challenge2`\n`RL!fun compatibility`\n`RL!fun firstmove`\n`RL!fun stealheart`\n`RL!fun mission2`\n`RL!fun fate`',
 inline:false
 },
 
