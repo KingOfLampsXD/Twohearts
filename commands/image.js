@@ -1,61 +1,110 @@
-const axios = require('axios');
+const { EmbedBuilder } = require("discord.js");
 
 module.exports = {
-  name: 'image',
+name: "love",
 
-  async execute(message, args) {
+async execute(message,args){
 
-    try {
+const sub=args[0]?.toLowerCase();
 
-      const prompt = args.join(' ');
+if(sub!=="scene") return;
 
-      const attachments =
-      [...message.attachments.values()];
+const lampy="KingOfLampsXD";
+const rose="RoseDazzler";
 
-      if (attachments.length < 2) {
-        return message.reply(
-          '📸 Upload Lampy + Rose skins too'
-        );
-      }
+const scene=args[1]?.toLowerCase() || "random";
 
-      const skin1 = attachments[0].url;
-      const skin2 = attachments[1].url;
+const scenes={
 
-      await message.channel.sendTyping();
+cherry:{
+msg:"okay okay give me a sec 😭 making Lampy and Rose under cherry blossoms",
+bg:"🌸 moonlit cherry blossom date"
+},
 
-      const loading =
-      await message.reply(
-        '🎨 Twohearts is preparing Lampy + Rose...'
-      );
+night:{
+msg:"late-night mode activated 😭",
+bg:"🌙 stars + lantern date"
+},
 
-      console.log('Skin 1:', skin1);
-      console.log('Skin 2:', skin2);
-      console.log('Prompt:', prompt);
+campfire:{
+msg:"cozy mode incoming",
+bg:"🔥 campfire cuddle scene"
+},
 
-      // future image backend call goes here
+wedding:{
+msg:"WAIT HOLD ON 😭",
+bg:"💍 minecraft wedding"
+},
 
-      await loading.edit(
-`💕 Ready
+cabin:{
+msg:"tiny cozy cabin loading",
+bg:"🏡 wooden cabin date"
+},
 
-Skin 1:
-${skin1}
+snow:{
+msg:"cold outside warm inside energy",
+bg:"❄️ snowy cuddle scene"
+}
 
-Skin 2:
-${skin2}
+};
 
-Prompt:
-${prompt}`
-      );
+const keys=Object.keys(scenes);
 
-    } catch(err){
+const picked=
+scene==="random"
+? scenes[keys[Math.floor(Math.random()*keys.length)]]
+: scenes[scene] || scenes.cherry;
 
-      console.log(err);
 
-      message.reply(
-        '❌ image failed'
-      );
+// skin body renders
+const lampySkin=
+`https://crafatar.com/renders/body/${lampy}?overlay`;
 
-    }
+const roseSkin=
+`https://crafatar.com/renders/body/${rose}?overlay`;
 
-  }
+const embed=
+new EmbedBuilder()
+
+.setColor("#ff7eb6")
+
+.setTitle("💞 Twohearts Scene")
+
+.setDescription(
+
+`${picked.msg}
+
+${picked.bg}
+
+Lampy ❤️ Rose forever`
+)
+
+.addFields(
+{
+name:"🧸 Lampy",
+value:`${lampy}`,
+inline:true
+},
+{
+name:"🌸 Rose",
+value:`${rose}`,
+inline:true
+}
+)
+
+.setImage(
+`https://mc-heads.net/banner/${lampy}/${rose}`
+)
+
+.setFooter({
+text:"Twohearts has seen this love arc before 😭"
+})
+
+.setTimestamp();
+
+message.reply({
+embeds:[embed]
+});
+
+}
 };
