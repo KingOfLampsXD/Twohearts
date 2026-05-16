@@ -108,7 +108,7 @@ const history =
 memory.get(id);
 
 
-// NEW: image/screenshot support
+// image / screenshot support
 
 const attachments =
 [...message.attachments.values()];
@@ -148,17 +148,16 @@ url:file.url
 
 }
 
-
 history.push({
 
 role:'user',
 
-content:userContent.length
+content:
+userContent.length
 ? userContent
 : `${message.author.username}: ${message.content}`
 
 });
-
 
 if(history.length > 12){
 
@@ -170,7 +169,7 @@ const response =
 await openai.chat.completions.create({
 
 model:
-'google/gemini-2.0-flash-exp:free',
+'google/gemini-2.5-flash-preview',
 
 messages:[
 
@@ -268,7 +267,9 @@ content:reply
 
 });
 
-return message.reply(reply);
+return message.reply(
+reply
+);
 
 }
 
