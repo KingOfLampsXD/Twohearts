@@ -9,56 +9,80 @@ async execute(message){
 const embed=
 new EmbedBuilder()
 
+.setColor('#ff7eb6')
+
 .setTitle(
-'💞 Twohearts — Lampy & Rose'
+'💞 Twohearts — Lampy & Rose World ✨'
 )
 
 .setDescription(
-'Your tiny world with Twohearts 😭✨'
+
+`Welcome home 😭
+
+Twohearts is your tiny third-wheel bestie living inside the server.
+
+Built for:
+💖 Love
+🎮 Chaos
+🌙 Late nights
+🫂 Soft moments
+✨ Lampy + Rose forever`
+
 )
 
 .addFields(
 
 {
-name:'💖 Love',
+name:'🫂 Love Stuff',
 value:
 '`RL!hug`\n`RL!kiss`\n`RL!ship`\n`RL!soulmate`',
 inline:true
 },
 
 {
-name:'🎮 Games',
+name:'🎮 Couple Games',
 value:
 '`RL!wouldyou`\n`RL!truth`\n`RL!dare`\n`RL!guess`\n`RL!battle`',
 inline:true
 },
 
 {
-name:'🌙 Cozy',
+name:'🌙 Cozy Mode',
 value:
 '`RL!night`\n`RL!date`\n`RL!scenario`\n`RL!fortune`',
 inline:true
 },
 
 {
-name:'🤍 AI',
+name:'🎲 Fun Box',
 value:
-'Talk inside `#twohearts-ai`\nTwohearts hangs out naturally 😭',
+'`RL!fun spin`\n`RL!fun gift`\n`RL!fun casino`\n`RL!fun vc`\n`RL!fun coin`\n`RL!fun dice`\n`RL!fun dailyhug`',
+inline:false
+},
+
+{
+name:'🤍 AI Friend',
+value:
+'Chat in `#twohearts-ai`\nTwohearts hangs around and reacts naturally 😭',
 inline:false
 }
 
 )
 
+.setThumbnail(
+message.guild.iconURL()
+)
+
 .setFooter({
 
 text:
-'Lampy ❤️ Rose forever'
+'Lampy ❤️ Rose • Distance tried, love said nope 😭'
 
 })
 
 .setTimestamp();
 
-message.reply({
+return message.reply({
 
 embeds:[embed]
 
