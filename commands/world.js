@@ -14,92 +14,19 @@ let data;
 
 if(fs.existsSync(path)){
 
-data=JSON.parse(
+data=
+JSON.parse(
 fs.readFileSync(path)
 );
 
 }else{
 
-data={
-
-xp:0,
-level:1,
-title:"Tiny Beans",
-
-stats:{}
-
-};
+data=null;
 
 }
-
-
-const games={
-
-vc:[10,"📞 another vc arc happened 😭"],
-movie:[8,"🎬 movie night added"],
-roblox:[9,"🎮 roblox chaos logged"],
-minecraft:[12,"⛏ minecraft date energy"],
-sleep:[8,"🌙 sleep call arc"],
-cuddle:[6,"🫂 comfort increased"],
-date:[15,"💕 date completed"],
-meme:[5,"😂 meme addiction growing"],
-music:[7,"🎵 music session added"],
-hug:[4,"💞 hug energy"],
-kiss:[5,"😭 illegal cuteness"],
-challenge:[8,"⚔ couple challenge complete"],
-truth:[6,"👀 truth survived"],
-dare:[7,"😈 chaos accepted"],
-battle:[9,"⚡ battle recorded"],
-guess:[6,"🤔 guessing arc"],
-fortune:[5,"✨ fate updated"],
-night:[5,"🌌 late night vibes"],
-call:[8,"📱 call logged"],
-pic:[7,"📸 memory unlocked"],
-gift:[10,"🎁 wholesome detected"],
-insidejoke:[9,"😭 inside joke expanded"],
-walk:[7,"🚶 tiny walk energy"],
-sleepy:[4,"😴 eepy detected"],
-comfort:[8,"🤍 comfort mode"],
-song:[6,"🎶 couple soundtrack updated"],
-pet:[7,"🐰 Mochi approves"],
-mission:[9,"🏆 mission complete"],
-laugh:[5,"😂 laugh counter increased"],
-chaos:[10,"💥 chaos level rising"]
-
-};
-
-
-const titles={
-
-2:"VC Goblins",
-3:"Sleep Call Survivors",
-5:"Minecraft Soulmates",
-7:"Chaos Couple",
-10:"Legendary Duo",
-15:"Infinite Love DLC",
-20:"Lampy + Rose Arc Masters"
-
-};
 
 
 function save(){
-
-while(data.xp>=100){
-
-data.xp-=100;
-
-data.level++;
-
-if(
-titles[data.level]
-){
-
-data.title=
-titles[data.level];
-
-}
-
-}
 
 fs.writeFileSync(
 path,
@@ -110,93 +37,380 @@ data,null,2)
 }
 
 
-if(action==="stats"){
+if(action==="start"){
 
-let text="";
-
-for(const key in data.stats){
-
-text+=
-`${key}: ${data.stats[key]}\n`;
-
-}
+if(data){
 
 return message.reply(
-
-`💞 Lampy + Rose World
-
-⭐ Level: ${data.level}
-✨ XP: ${data.xp}/100
-🏆 ${data.title}
-
-${text || "No activities yet 😭"}`
+"😭 world already exists"
 );
 
 }
 
+data={
 
-if(!games[action]){
+level:1,
+bond:50,
+hearts:0,
+mood:"cozy",
+arc:"Beginning Days",
 
-return message.reply(
+home:"Tiny Room",
 
-`RL!world stats
+inventory:[],
 
-Activities:
+wins:0,
 
-vc
-movie
-roblox
-minecraft
-sleep
-cuddle
-date
-meme
-music
-hug
-kiss
-challenge
-truth
-dare
-battle
-guess
-fortune
-night
-call
-pic
-gift
-insidejoke
-walk
-sleepy
-comfort
-song
-pet
-mission
-laugh
-chaos`
-);
+event:null,
 
-}
+titles:[
+"tiny beans"
+]
 
-
-if(!data.stats[action]){
-
-data.stats[action]=0;
-
-}
-
-data.stats[action]++;
-
-data.xp+=games[action][0];
+};
 
 save();
 
 return message.reply(
 
-`${games[action][1]}
+`💞 Lampy + Rose world started
 
-+${games[action][0]} XP 💞
+🏠 Tiny Room unlocked
+❤️ Bond: 50
+⭐ Level:1
 
-Total ${action}: ${data.stats[action]}`
+use RL!world next 😭`
+
+);
+
+}
+
+
+if(!data){
+
+return message.reply(
+"RL!world start"
+);
+
+}
+
+
+// random world events
+
+const events=[
+
+{
+
+title:"🌧 Rainy Evening",
+
+text:
+"Rose found a mysterious box",
+
+choices:[
+
+"Open it",
+
+"Ignore it",
+
+"Save for later"
+
+],
+
+effects:[
+
+()=>{
+
+data.inventory.push(
+"Tiny Plush"
+);
+
+data.bond+=5;
+
+},
+
+()=>{
+
+data.hearts+=2;
+
+},
+
+()=>{
+
+data.inventory.push(
+"Mystery Box"
+);
+
+}
+
+]
+
+},
+
+{
+
+title:"🌙 Late Night VC",
+
+text:
+"Lampy and Rose stayed awake too long",
+
+choices:[
+
+"keep talking",
+
+"go sleep",
+
+"watch memes"
+
+],
+
+effects:[
+
+()=>{
+
+data.bond+=10;
+
+},
+
+()=>{
+
+data.hearts+=5;
+
+},
+
+()=>{
+
+data.inventory.push(
+"Meme Memory"
+);
+
+}
+
+]
+
+},
+
+{
+
+title:"🎮 Roblox Chaos",
+
+text:
+"both of you found a cursed game",
+
+choices:[
+
+"play it",
+
+"run",
+
+"invite chaos"
+
+],
+
+effects:[
+
+()=>{
+
+data.hearts+=15;
+
+},
+
+()=>{
+
+data.bond-=2;
+
+},
+
+()=>{
+
+data.wins++;
+
+}
+
+]
+
+}
+
+];
+
+
+if(action==="next"){
+
+const event=
+
+events[
+Math.floor(
+Math.random()*
+events.length
+)
+];
+
+data.event=event;
+
+save();
+
+return message.reply(
+
+`${event.title}
+
+${event.text}
+
+1. ${event.choices[0]}
+2. ${event.choices[1]}
+3. ${event.choices[2]}
+
+RL!world choose 1`
+
+);
+
+}
+
+
+
+if(action==="choose"){
+
+if(!data.event){
+
+return message.reply(
+"😭 no event active"
+);
+
+}
+
+const num=
+parseInt(args[1])-1;
+
+if(
+num<0
+||
+num>2
+){
+
+return message.reply(
+"pick 1-3"
+);
+
+}
+
+
+data.event.effects[num]();
+
+data.hearts+=10;
+
+
+if(data.hearts>=100){
+
+data.level++;
+
+data.hearts=0;
+
+}
+
+
+if(data.level===3){
+
+data.home=
+"Cozy Cabin";
+
+}
+
+
+if(data.level===5){
+
+data.titles.push(
+"Professional Sleep Call Survivors"
+);
+
+}
+
+
+data.event=null;
+
+save();
+
+return message.reply(
+
+`choice complete 😭
+
+⭐ Level:${data.level}
+❤️ Bond:${data.bond}
+💞 Hearts:${data.hearts}/100`
+
+);
+
+}
+
+
+
+if(action==="stats"){
+
+return message.reply(
+
+`💞 Lampy + Rose
+
+⭐ Level:${data.level}
+
+❤️ Bond:${data.bond}
+
+💞 Hearts:${data.hearts}/100
+
+🌙 Arc:${data.arc}
+
+🏠 Home:${data.home}
+
+🏆 ${
+data.titles.join(", ")
+}`
+
+);
+
+}
+
+
+
+if(action==="inventory"){
+
+return message.reply(
+
+`🎒 Inventory
+
+${
+data.inventory.length
+?
+data.inventory.join("\n")
+:
+"empty 😭"
+}`
+
+);
+
+}
+
+
+if(action==="home"){
+
+return message.reply(
+
+`🏠 ${data.home}
+
+Unlocked:
+
+🧸 Plush Shelf
+🌙 Sleep Corner
+💡 Lamp Collection`
+
+);
+
+}
+
+
+return message.reply(
+
+`RL!world start
+RL!world next
+RL!world choose 1
+RL!world stats
+RL!world inventory
+RL!world home`
 
 );
 
