@@ -62,9 +62,16 @@ inline:false
 },
 
 {
+name:'🌎 World Game',
+value:
+'`RL!world start`\n`RL!world next`\n`RL!world choose 1`\n`RL!world choose 2`\n`RL!world choose 3`\n`RL!world stats`\n`RL!world inventory`\n`RL!world home`',
+inline:false
+},
+
+{
 name:'💖 Love Pack',
 value:
-'`RL!love mood`\n`RL!love pickup`\n`RL!love rate`\n`RL!love wish`\n`RL!love promise`\n`RL!love nick`\n`RL!love challenge`\n`RL!love emoji`\n`RL!love song`\n`RL!love countdown`',
+'`RL!love mood`\n`RL!love pickup`\n`RL!love rate`\n`RL!love wish`\n`RL!love promise`\n`RL!love nick`\n`RL!love challenge`\n`RL!love emoji`\n`RL!love song`\n`RL!love countdown`\n`RL!lovescene`',
 inline:false
 },
 
