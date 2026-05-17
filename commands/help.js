@@ -43,7 +43,7 @@ inline:true
 {
 name:'🎮 Couple Games',
 value:
-'`RL!wouldyou`\n`RL!truth`\n`RL!dare`\n`RL!guess`\n`RL!battle`\n`RL!catchheart`',
+'`RL!wouldyou`\n`RL!truth`\n`RL!dare`\n`RL!guess`\n`RL!battle`\n`RL!catchheart`\n`RL!catchheart stats`',
 inline:true
 },
 
