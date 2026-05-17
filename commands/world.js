@@ -1,4 +1,7 @@
 const fs=require("fs");
+const {
+EmbedBuilder
+}=require("discord.js");
 
 module.exports={
 
@@ -6,7 +9,8 @@ name:"world",
 
 async execute(message,args){
 
-const action=args[0]?.toLowerCase();
+const action=
+args[0]?.toLowerCase();
 
 const path="./world.json";
 
@@ -24,7 +28,6 @@ fs.readFileSync(path)
 data=null;
 
 }
-
 
 function save(){
 
@@ -52,20 +55,21 @@ data={
 level:1,
 bond:50,
 hearts:0,
-mood:"cozy",
+coins:25,
+
+title:"Tiny Beans",
+
 arc:"Beginning Days",
 
 home:"Tiny Room",
 
+place:"Town",
+
 inventory:[],
 
-wins:0,
+completed:0,
 
-event:null,
-
-titles:[
-"tiny beans"
-]
+event:null
 
 };
 
@@ -75,15 +79,32 @@ return message.reply(
 
 `💞 Lampy + Rose world started
 
-🏠 Tiny Room unlocked
-❤️ Bond: 50
-⭐ Level:1
+🏠 Tiny Room
+🪙 Coins:25
+❤️ Bond:50
 
 use RL!world next 😭`
 
 );
 
 }
+
+
+
+if(action==="reset"){
+
+if(fs.existsSync(path)){
+
+fs.unlinkSync(path);
+
+}
+
+return message.reply(
+"💔 world deleted 😭 start again together"
+);
+
+}
+
 
 
 if(!data){
@@ -94,8 +115,6 @@ return message.reply(
 
 }
 
-
-// random world events
 
 const events=[
 
@@ -116,72 +135,65 @@ choices:[
 
 ],
 
-effects:[
+results:[
 
-()=>{
-
-data.inventory.push(
-"Tiny Plush"
-);
-
-data.bond+=5;
-
+{
+bond:5,
+item:"Tiny Plush",
+text:"🧸 Tiny Plush found"
 },
 
-()=>{
-
-data.hearts+=2;
-
+{
+coins:10,
+text:"🪙 found hidden coins"
 },
 
-()=>{
-
-data.inventory.push(
-"Mystery Box"
-);
-
+{
+item:"Mystery Box",
+text:"📦 saved mystery box"
 }
 
 ]
 
 },
 
+
 {
 
-title:"🌙 Late Night VC",
+title:"🌙 Sleep Call Arc",
 
 text:
-"Lampy and Rose stayed awake too long",
+"you both accidentally stayed awake",
 
 choices:[
 
-"keep talking",
+"talk more",
 
-"go sleep",
+"sleep now",
 
 "watch memes"
 
 ],
 
-effects:[
+results:[
 
-()=>{
+{
+bond:10,
+text:"💞 comfort increased"
+},
 
-data.bond+=10;
+{
+hearts:15,
+text:"🌙 healthy choice"
 
 },
 
-()=>{
+{
 
-data.hearts+=5;
+item:"Meme Memory",
 
-},
-
-()=>{
-
-data.inventory.push(
-"Meme Memory"
-);
+text:
+"😂 meme memory unlocked"
 
 }
 
@@ -194,35 +206,44 @@ data.inventory.push(
 title:"🎮 Roblox Chaos",
 
 text:
-"both of you found a cursed game",
+"cursed game discovered",
 
 choices:[
 
-"play it",
+"play",
 
 "run",
 
-"invite chaos"
+"embrace chaos"
 
 ],
 
-effects:[
+results:[
 
-()=>{
+{
 
-data.hearts+=15;
+coins:20,
 
-},
-
-()=>{
-
-data.bond-=2;
+text:
+"🎮 won something"
 
 },
 
-()=>{
+{
 
-data.wins++;
+bond:-2,
+
+text:
+"😭 cowards"
+
+},
+
+{
+
+hearts:20,
+
+text:
+"💥 chaos energy"
 
 }
 
@@ -233,10 +254,10 @@ data.wins++;
 ];
 
 
+
 if(action==="next"){
 
 const event=
-
 events[
 Math.floor(
 Math.random()*
@@ -271,7 +292,7 @@ if(action==="choose"){
 if(!data.event){
 
 return message.reply(
-"😭 no event active"
+"😭 no event"
 );
 
 }
@@ -280,48 +301,86 @@ const num=
 parseInt(args[1])-1;
 
 if(
+isNaN(num)
+||
 num<0
 ||
 num>2
 ){
 
 return message.reply(
-"pick 1-3"
+"pick 1-3 😭"
+);
+
+}
+
+const result=
+data.event.results[num];
+
+if(result.bond)
+data.bond+=result.bond;
+
+if(result.coins)
+data.coins+=result.coins;
+
+if(result.hearts)
+data.hearts+=result.hearts;
+
+if(result.item){
+
+data.inventory.push(
+result.item
 );
 
 }
 
 
-data.event.effects[num]();
-
-data.hearts+=10;
+data.completed++;
 
 
-if(data.hearts>=100){
+while(
+data.hearts>=100
+){
+
+data.hearts-=100;
 
 data.level++;
-
-data.hearts=0;
 
 }
 
 
-if(data.level===3){
+if(data.level>=3){
 
 data.home=
 "Cozy Cabin";
 
-}
-
-
-if(data.level===5){
-
-data.titles.push(
-"Professional Sleep Call Survivors"
-);
+data.place=
+"Cherry Hills";
 
 }
 
+
+if(data.level>=5){
+
+data.title=
+"Professional Sleep Call Survivors";
+
+}
+
+
+if(data.level>=8){
+
+data.place=
+"Love Forest";
+
+data.home=
+"Dream House";
+
+}
+
+
+const text=
+result.text;
 
 data.event=null;
 
@@ -329,11 +388,12 @@ save();
 
 return message.reply(
 
-`choice complete 😭
+`${text}
 
 ⭐ Level:${data.level}
 ❤️ Bond:${data.bond}
-💞 Hearts:${data.hearts}/100`
+💞 Hearts:${data.hearts}/100
+🪙 Coins:${data.coins}`
 
 );
 
@@ -343,25 +403,43 @@ return message.reply(
 
 if(action==="stats"){
 
-return message.reply(
+const embed=
+new EmbedBuilder()
 
-`💞 Lampy + Rose
+.setColor("#ff7eb6")
 
-⭐ Level:${data.level}
+.setTitle(
+"💞 Lampy + Rose World"
+)
 
-❤️ Bond:${data.bond}
+.setDescription(
 
-💞 Hearts:${data.hearts}/100
+`⭐ Level: ${data.level}
 
-🌙 Arc:${data.arc}
+❤️ Bond: ${data.bond}
 
-🏠 Home:${data.home}
+💞 Hearts: ${data.hearts}/100
 
-🏆 ${
-data.titles.join(", ")
-}`
+🪙 Coins: ${data.coins}
+
+🏠 Home: ${data.home}
+
+🌎 Place: ${data.place}
+
+🏆 ${data.title}
+
+📖 Arc:
+${data.arc}`
 
 );
+
+return message.reply({
+
+embeds:[
+embed
+]
+
+});
 
 }
 
@@ -386,31 +464,112 @@ data.inventory.join("\n")
 }
 
 
+
 if(action==="home"){
+
+const homes={
+
+"Tiny Room":
+"🛏 single room\n🧸 empty shelf",
+
+"Cozy Cabin":
+"🪟 warm windows\n🌙 sleep corner\n🧸 plush shelf",
+
+"Dream House":
+"🌸 cherry garden\n🐰 mochi room\n💡 lamp collection"
+
+};
 
 return message.reply(
 
 `🏠 ${data.home}
 
-Unlocked:
-
-🧸 Plush Shelf
-🌙 Sleep Corner
-💡 Lamp Collection`
+${homes[data.home]}`
 
 );
 
 }
 
 
+
+if(action==="map"){
+
 return message.reply(
 
-`RL!world start
-RL!world next
-RL!world choose 1
-RL!world stats
-RL!world inventory
-RL!world home`
+`🌎 World
+
+🏠 Town
+
+🌸 Cherry Hills
+
+🌲 Love Forest
+
+🌙 Dream District`
+
+);
+
+}
+
+
+
+if(action==="scene"){
+
+const scenes=[
+
+"https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+
+"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
+
+"https://images.unsplash.com/photo-1507525428034-b723cf961d3e"
+
+];
+
+const embed=
+new EmbedBuilder()
+
+.setColor("#ff7eb6")
+
+.setTitle(
+`📸 ${data.place}`
+)
+
+.setDescription(
+"Twohearts dragged Lampy + Rose somewhere 😭"
+)
+
+.setImage(
+scenes[
+Math.floor(
+Math.random()*scenes.length
+)
+]
+);
+
+return message.reply({
+
+embeds:[
+embed
+]
+
+});
+
+}
+
+
+
+return message.reply(
+
+`💞 RL!world
+
+start
+next
+choose 1
+stats
+inventory
+home
+map
+scene
+reset`
 
 );
 
