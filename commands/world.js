@@ -1,7 +1,5 @@
 const fs=require("fs");
-const {
-EmbedBuilder
-}=require("discord.js");
+const {EmbedBuilder}=require("discord.js");
 
 module.exports={
 
@@ -9,32 +7,21 @@ name:"world",
 
 async execute(message,args){
 
-const action=
-args[0]?.toLowerCase();
-
+const action=args[0]?.toLowerCase();
 const path="./world.json";
 
-let data;
-
-if(fs.existsSync(path)){
-
-data=
-JSON.parse(
-fs.readFileSync(path)
-);
-
-}else{
-
-data=null;
-
-}
+let data=
+fs.existsSync(path)
+?
+JSON.parse(fs.readFileSync(path))
+:
+null;
 
 function save(){
 
 fs.writeFileSync(
 path,
-JSON.stringify(
-data,null,2)
+JSON.stringify(data,null,2)
 );
 
 }
@@ -53,11 +40,14 @@ return message.reply(
 data={
 
 level:1,
+xp:0,
 bond:50,
 hearts:0,
-coins:25,
+coins:50,
 
 title:"Tiny Beans",
+
+rank:"Strangers 😭",
 
 arc:"Beginning Days",
 
@@ -65,9 +55,15 @@ home:"Tiny Room",
 
 place:"Town",
 
+pet:null,
+
 inventory:[],
 
+quests:[],
+
 completed:0,
+
+weather:"☀️ Sunny",
 
 event:null
 
@@ -77,13 +73,13 @@ save();
 
 return message.reply(
 
-`💞 Lampy + Rose world started
+`💞 Lampy + Rose World started
 
 🏠 Tiny Room
-🪙 Coins:25
+🪙 50 coins
 ❤️ Bond:50
 
-use RL!world next 😭`
+RL!world next 😭`
 
 );
 
@@ -93,14 +89,11 @@ use RL!world next 😭`
 
 if(action==="reset"){
 
-if(fs.existsSync(path)){
-
+if(fs.existsSync(path))
 fs.unlinkSync(path);
 
-}
-
 return message.reply(
-"💔 world deleted 😭 start again together"
+"💔 entire world deleted 😭"
 );
 
 }
@@ -116,85 +109,94 @@ return message.reply(
 }
 
 
+
+const weather=[
+
+"☀️ Sunny",
+"🌧 Rain",
+"🌙 Sleepy Night",
+"🌸 Cherry Petals",
+"⛈ Chaos Weather",
+"✨ Cozy Vibes"
+
+];
+
+
+data.weather=
+weather[
+Math.floor(
+Math.random()*
+weather.length
+)
+];
+
+
+
 const events=[
 
 {
 
-title:"🌧 Rainy Evening",
+title:"🌸 Cherry Arc",
 
 text:
-"Rose found a mysterious box",
+"you found sleeping cat",
 
 choices:[
-
-"Open it",
-
-"Ignore it",
-
-"Save for later"
-
-],
-
-results:[
-
-{
-bond:5,
-item:"Tiny Plush",
-text:"🧸 Tiny Plush found"
-},
-
-{
-coins:10,
-text:"🪙 found hidden coins"
-},
-
-{
-item:"Mystery Box",
-text:"📦 saved mystery box"
-}
-
-]
-
-},
-
-
-{
-
-title:"🌙 Sleep Call Arc",
-
-text:
-"you both accidentally stayed awake",
-
-choices:[
-
-"talk more",
-
-"sleep now",
-
-"watch memes"
-
+"adopt",
+"pet",
+"run"
 ],
 
 results:[
 
 {
 bond:10,
-text:"💞 comfort increased"
+pet:"Mochi",
+text:"🐱 Mochi joined"
 },
 
 {
-hearts:15,
-text:"🌙 healthy choice"
+hearts:20,
+text:"💞 cuteness damage"
+},
+
+{
+bond:-5,
+text:"😭 cat sadness"
+}
+
+]
 
 },
 
 {
 
-item:"Meme Memory",
+title:"🌙 Sleep Call",
 
 text:
-"😂 meme memory unlocked"
+"2am choices appeared",
 
+choices:[
+"talk",
+"sleep",
+"memes"
+],
+
+results:[
+
+{
+bond:10,
+text:"💖 comfort increased"
+},
+
+{
+hearts:10,
+text:"🌙 healthy choice"
+},
+
+{
+coins:10,
+text:"😂 meme reward"
 }
 
 ]
@@ -209,42 +211,26 @@ text:
 "cursed game discovered",
 
 choices:[
-
-"play",
-
-"run",
-
-"embrace chaos"
-
+"join",
+"escape",
+"embrace"
 ],
 
 results:[
 
 {
-
-coins:20,
-
-text:
-"🎮 won something"
-
+coins:25,
+text:"🪙 victory"
 },
 
 {
-
 bond:-2,
-
-text:
-"😭 cowards"
-
+text:"😭 fear"
 },
 
 {
-
-hearts:20,
-
-text:
-"💥 chaos energy"
-
+hearts:30,
+text:"💥 chaos energy"
 }
 
 ]
@@ -273,6 +259,8 @@ return message.reply(
 
 `${event.title}
 
+🌦 ${data.weather}
+
 ${event.text}
 
 1. ${event.choices[0]}
@@ -289,65 +277,56 @@ RL!world choose 1`
 
 if(action==="choose"){
 
-if(!data.event){
-
+if(!data.event)
 return message.reply(
 "😭 no event"
 );
 
-}
-
 const num=
 parseInt(args[1])-1;
 
-if(
-isNaN(num)
-||
-num<0
-||
-num>2
-){
-
+if(isNaN(num)||num<0||num>2)
 return message.reply(
 "pick 1-3 😭"
 );
 
-}
 
-const result=
+const r=
 data.event.results[num];
 
-if(result.bond)
-data.bond+=result.bond;
+if(r.bond)
+data.bond+=r.bond;
 
-if(result.coins)
-data.coins+=result.coins;
+if(r.hearts)
+data.hearts+=r.hearts;
 
-if(result.hearts)
-data.hearts+=result.hearts;
+if(r.coins)
+data.coins+=r.coins;
 
-if(result.item){
+if(r.pet)
+data.pet=r.pet;
 
-data.inventory.push(
-result.item
-);
-
-}
+if(r.item)
+data.inventory.push(r.item);
 
 
+data.xp+=25;
 data.completed++;
 
+while(data.xp>=100){
 
-while(
-data.hearts>=100
-){
-
-data.hearts-=100;
+data.xp-=100;
 
 data.level++;
 
 }
 
+
+if(data.bond>=70)
+data.rank="Soulmates 💞";
+
+if(data.bond>=120)
+data.rank="Unseparable 😭";
 
 if(data.level>=3){
 
@@ -359,41 +338,76 @@ data.place=
 
 }
 
-
-if(data.level>=5){
-
-data.title=
-"Professional Sleep Call Survivors";
-
-}
-
-
-if(data.level>=8){
-
-data.place=
-"Love Forest";
+if(data.level>=7){
 
 data.home=
 "Dream House";
 
+data.place=
+"Love Forest";
+
+}
+
+save();
+
+data.event=null;
+
+return message.reply(
+
+`${r.text}
+
+⭐ Level:${data.level}
+✨ XP:${data.xp}/100
+❤️ Bond:${data.bond}
+🪙 Coins:${data.coins}
+🏆 ${data.rank}`
+
+);
+
 }
 
 
-const text=
-result.text;
 
-data.event=null;
+if(action==="daily"){
+
+const reward=
+Math.floor(
+Math.random()*50
+)+20;
+
+data.coins+=reward;
 
 save();
 
 return message.reply(
 
-`${text}
+`🎁 Daily reward
 
-⭐ Level:${data.level}
-❤️ Bond:${data.bond}
-💞 Hearts:${data.hearts}/100
-🪙 Coins:${data.coins}`
++${reward} coins
+
+🪙 Total:${data.coins}`
+
+);
+
+}
+
+
+
+if(action==="pet"){
+
+return message.reply(
+
+data.pet
+?
+`🐱 ${data.pet}
+
+level:
+${data.level}
+
+mood:
+sleepy 😭`
+:
+"😭 no pet yet"
 
 );
 
@@ -402,6 +416,13 @@ return message.reply(
 
 
 if(action==="stats"){
+
+const bar=
+"❤️".repeat(
+Math.floor(
+data.bond/10
+)
+);
 
 const embed=
 new EmbedBuilder()
@@ -414,30 +435,33 @@ new EmbedBuilder()
 
 .setDescription(
 
-`⭐ Level: ${data.level}
+`🏆 ${data.rank}
 
-❤️ Bond: ${data.bond}
+⭐ Level:${data.level}
+✨ XP:${data.xp}/100
 
-💞 Hearts: ${data.hearts}/100
+❤️ Bond:${data.bond}
 
-🪙 Coins: ${data.coins}
+${bar}
 
-🏠 Home: ${data.home}
+🪙 Coins:${data.coins}
 
-🌎 Place: ${data.place}
+🏠 ${data.home}
 
-🏆 ${data.title}
+🌎 ${data.place}
 
-📖 Arc:
-${data.arc}`
+🌦 ${data.weather}
+
+🐱 ${
+data.pet||
+"none"
+}`
 
 );
 
 return message.reply({
 
-embeds:[
-embed
-]
+embeds:[embed]
 
 });
 
@@ -465,98 +489,6 @@ data.inventory.join("\n")
 
 
 
-if(action==="home"){
-
-const homes={
-
-"Tiny Room":
-"🛏 single room\n🧸 empty shelf",
-
-"Cozy Cabin":
-"🪟 warm windows\n🌙 sleep corner\n🧸 plush shelf",
-
-"Dream House":
-"🌸 cherry garden\n🐰 mochi room\n💡 lamp collection"
-
-};
-
-return message.reply(
-
-`🏠 ${data.home}
-
-${homes[data.home]}`
-
-);
-
-}
-
-
-
-if(action==="map"){
-
-return message.reply(
-
-`🌎 World
-
-🏠 Town
-
-🌸 Cherry Hills
-
-🌲 Love Forest
-
-🌙 Dream District`
-
-);
-
-}
-
-
-
-if(action==="scene"){
-
-const scenes=[
-
-"https://images.unsplash.com/photo-1506744038136-46273834b3fb",
-
-"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
-
-"https://images.unsplash.com/photo-1507525428034-b723cf961d3e"
-
-];
-
-const embed=
-new EmbedBuilder()
-
-.setColor("#ff7eb6")
-
-.setTitle(
-`📸 ${data.place}`
-)
-
-.setDescription(
-"Twohearts dragged Lampy + Rose somewhere 😭"
-)
-
-.setImage(
-scenes[
-Math.floor(
-Math.random()*scenes.length
-)
-]
-);
-
-return message.reply({
-
-embeds:[
-embed
-]
-
-});
-
-}
-
-
-
 return message.reply(
 
 `💞 RL!world
@@ -565,10 +497,9 @@ start
 next
 choose 1
 stats
+daily
+pet
 inventory
-home
-map
-scene
 reset`
 
 );
