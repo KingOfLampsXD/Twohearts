@@ -1,4 +1,9 @@
-const { EmbedBuilder } = require('discord.js');
+const {
+EmbedBuilder,
+ActionRowBuilder,
+ButtonBuilder,
+ButtonStyle
+}=require('discord.js');
 
 module.exports={
 
@@ -6,7 +11,13 @@ name:'help',
 
 async execute(message){
 
-const embed=
+const pages=[];
+
+
+// HOME
+
+pages.push(
+
 new EmbedBuilder()
 
 .setColor('#ff7eb6')
@@ -25,7 +36,6 @@ Twohearts is your tiny third-wheel bestie living in the server.
 🎮 Chaos
 🌙 Late nights
 💌 Memories
-✨ Tiny world for Lampy + Rose
 
 Lampy ❤️ Rose forever`
 
@@ -41,52 +51,10 @@ inline:true
 },
 
 {
-name:'🎮 Couple Games',
+name:'🎮 Games',
 value:
-'`RL!wouldyou`\n`RL!truth`\n`RL!dare`\n`RL!guess`\n`RL!battle`\n`RL!catchheart`\n`RL!catchheart stats`',
+'`RL!wouldyou`\n`RL!truth`\n`RL!dare`\n`RL!guess`\n`RL!battle`\n`RL!catchheart`',
 inline:true
-},
-
-{
-name:'🌙 Cozy',
-value:
-'`RL!night`\n`RL!date`\n`RL!scenario`\n`RL!fortune`\n`RL!lovescene`',
-inline:true
-},
-
-{
-name:'💌 Fun Systems',
-value:
-'`RL!fun letter <msg>`\n`RL!fun openletter`\n`RL!fun memory <memory>`\n`RL!fun memories`\n`RL!fun streak`\n`RL!fun mission`\n`RL!fun sleep`\n`RL!fun vote a | b`\n`RL!fun stare`\n`RL!fun choose`\n`RL!fun memorytest`\n`RL!fun thisorthat`\n`RL!fun challenge2`\n`RL!fun compatibility`\n`RL!fun firstmove`\n`RL!fun stealheart`\n`RL!fun mission2`\n`RL!fun fate`',
-inline:false
-},
-
-{
-name:'🎪 Chaos Pack',
-value:
-'`RL!heartbeat`\n`RL!sync`\n`RL!mood`\n`RL!dream`\n`RL!chaos`\n`RL!cuddle`\n`RL!kissmeter`\n`RL!sleepcall`\n`RL!vibes`\n`RL!pet`\n`RL!adopt`\n`RL!dailygift`\n`RL!lovebank`\n`RL!fortune2`\n`RL!latecall`\n`RL!dateidea`\n`RL!cringe`\n`RL!memory`\n`RL!distance`\n`RL!compatibility`\n`RL!firstmove`\n`RL!future`\n`RL!stare`\n`RL!stealheart`\n`RL!fate`\n`RL!blush`\n`RL!mystery`\n`RL!wish`\n`RL!obsessed`\n`RL!mochi`',
-inline:false
-},
-
-{
-name:'🌎 World',
-value:
-'`RL!world start`\n`RL!world next`\n`RL!world choose 1`\n`RL!world choose 2`\n`RL!world choose 3`\n`RL!world stats`\n`RL!world inventory`\n`RL!world home`\n`RL!world map`\n`RL!world scene`\n`RL!world reset`',
-inline:false
-},
-
-{
-name:'💖 Love Pack',
-value:
-'`RL!love mood`\n`RL!love pickup`\n`RL!love rate`\n`RL!love wish`\n`RL!love promise`\n`RL!love nick`\n`RL!love challenge`\n`RL!love emoji`\n`RL!love song`\n`RL!love countdown`',
-inline:false
-},
-
-{
-name:'🤍 AI Friend',
-value:
-'Chat in `#twohearts-ai`\nTwohearts hangs around naturally 😭',
-inline:false
 }
 
 )
@@ -96,19 +64,256 @@ message.guild.iconURL()
 )
 
 .setFooter({
-
-text:
-'Distance tried • Love said nope 😭💞'
-
+text:'Page 1/4 😭💞'
 })
 
-.setTimestamp();
+);
 
-return message.reply({
 
-embeds:[embed]
+// PAGE 2
+
+pages.push(
+
+new EmbedBuilder()
+
+.setColor("#ff7eb6")
+
+.setTitle(
+"💌 Fun Stuff"
+)
+
+.setDescription(
+
+'`RL!fun letter`\n`RL!fun memories`\n`RL!fun streak`\n`RL!fun mission`\n`RL!fun vote`\n`RL!fun thisorthat`\n`RL!fun compatibility`\n`RL!fun fate`'
+
+)
+
+.setFooter({
+text:'Page 2/4 😭'
+})
+
+);
+
+
+
+// PAGE 3
+
+pages.push(
+
+new EmbedBuilder()
+
+.setColor("#ff7eb6")
+
+.setTitle(
+"🎪 Chaos Pack"
+)
+
+.setDescription(
+
+'`RL!heartbeat`\n`RL!sync`\n`RL!mood`\n`RL!dream`\n`RL!chaos`\n`RL!cuddle`\n`RL!kissmeter`\n`RL!sleepcall`\n`RL!vibes`\n`RL!pet`\n`RL!future`\n`RL!stare`\n`RL!wish`\n`RL!obsessed`\n`RL!mochi`'
+
+)
+
+.setFooter({
+text:'Page 3/4 😭'
+})
+
+);
+
+
+// PAGE 4
+
+pages.push(
+
+new EmbedBuilder()
+
+.setColor("#ff7eb6")
+
+.setTitle(
+"🌎 World + AI"
+)
+
+.setDescription(
+
+'`RL!world start`\n`RL!world next`\n`RL!world stats`\n`RL!world inventory`\n`RL!world reset`\n\n🤍 Chat in `#twohearts-ai`'
+
+)
+
+.setFooter({
+text:'Page 4/4 😭💞'
+})
+
+);
+
+
+
+let current=0;
+
+
+const row=
+new ActionRowBuilder()
+
+.addComponents(
+
+new ButtonBuilder()
+
+.setCustomId(
+"left"
+)
+
+.setEmoji(
+"⬅️"
+)
+
+.setStyle(
+ButtonStyle.Secondary
+),
+
+new ButtonBuilder()
+
+.setCustomId(
+"home"
+)
+
+.setEmoji(
+"💞"
+)
+
+.setStyle(
+ButtonStyle.Danger
+),
+
+new ButtonBuilder()
+
+.setCustomId(
+"right"
+)
+
+.setEmoji(
+"➡️"
+)
+
+.setStyle(
+ButtonStyle.Secondary
+)
+
+);
+
+
+const msg=
+await message.reply({
+
+embeds:[
+pages[current]
+],
+
+components:[
+row
+]
 
 });
+
+
+const collector=
+msg.createMessageComponentCollector({
+
+time:60000
+
+});
+
+
+collector.on(
+
+"collect",
+
+async(i)=>{
+
+if(
+i.user.id
+!==message.author.id
+){
+
+return i.reply({
+
+content:
+"😭 not your menu",
+
+ephemeral:true
+
+});
+
+}
+
+
+if(
+i.customId==="right"
+){
+
+current++;
+
+if(
+current>=pages.length
+)
+current=0;
+
+}
+
+
+if(
+i.customId==="left"
+){
+
+current--;
+
+if(
+current<0
+)
+current=
+pages.length-1;
+
+}
+
+
+if(
+i.customId==="home"
+){
+
+current=0;
+
+}
+
+
+await i.update({
+
+embeds:[
+pages[current]
+],
+
+components:[
+row
+]
+
+});
+
+}
+
+);
+
+
+collector.on(
+"end",
+
+()=>{
+
+msg.edit({
+
+components:[]
+
+}).catch(()=>{});
+
+}
+
+);
 
 }
 
