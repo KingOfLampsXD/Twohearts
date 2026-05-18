@@ -3,7 +3,6 @@ module.exports={
 name:"heartbeat",
 
 aliases:[
-
 "sync",
 "mood",
 "dream",
@@ -33,357 +32,184 @@ aliases:[
 "wish",
 "obsessed",
 "mochi"
-
 ],
 
 async execute(message,args){
 
 const cmd=
 message.content
-.slice(3)
-.trim()
-.split(/ +/)[0]
-.toLowerCase();
+.toLowerCase()
+.replace(/^rl!/,"")
+.split(/ +/)[0];
 
 
 
-if(cmd==="heartbeat"){
+const responses={
 
-const n=
-Math.floor(Math.random()*100);
+heartbeat:()=>`❤️ Heart sync: ${Math.floor(Math.random()*100)}%`,
 
-return message.reply(
-`❤️ Sync: ${n}%`
-);
+sync:()=>`💞 Soul connection: ${Math.floor(Math.random()*100)}%`,
 
-}
-
-
-
-if(cmd==="sync"){
-
-return message.reply(
-`💞 Soul connection: ${Math.floor(Math.random()*100)}%`
-);
-
-}
-
-
-
-if(cmd==="mood"){
+mood:()=>{
 
 const x=[
-
 "clingy 😭",
-"chaotic goblins",
+"chaotic goblins 😭",
 "minecraft date mode",
 "soft",
 "sleepy"
-
 ];
 
-return message.reply(
+return `😊 ${x[Math.floor(Math.random()*x.length)]}`;
 
-`😊 ${
-x[
-Math.floor(
-Math.random()*x.length
-)
-]
-}`
+},
 
-);
+dream:()=>{
 
-}
+const x=[
+"Rose stole fries 😭",
+"minecraft wedding 😭",
+"Mochi became mayor 😭"
+];
 
+return `💭 ${x[Math.floor(Math.random()*x.length)]}`;
 
+},
 
-if(cmd==="dream"){
+chaos:()=>
+"💥 Cat invasion detected",
+
+cuddle:()=>
+"🫂 cuddle meter: 97%",
+
+kissmeter:()=>
+`💋 Kiss power: ${Math.floor(Math.random()*100)}%`,
+
+sleepcall:()=>
+"🌙 survived another sleep call 😭",
+
+vibes:()=>
+"✨ current vibes: soft + sleepy",
+
+pet:()=>
+"🐱 Mochi is eepy",
+
+adopt:()=>
+"🐰 Mochi joined the family 😭",
+
+dailygift:()=>
+"🎁 +50 love coins",
+
+lovebank:()=>
+`💰 Love bank: ${Math.floor(Math.random()*500)} coins`,
+
+fortune2:()=>
+"🔮 tomorrow contains chaos",
+
+latecall:()=>
+"📞 3AM energy activated",
+
+dateidea:()=>{
+
+const x=[
+"🎮 Roblox + VC",
+"🍿 Watch movie together",
+"🌙 Sleepcall + music",
+"🧸 Build Minecraft house"
+];
+
+return x[Math.floor(Math.random()*x.length)];
+
+},
+
+cringe:()=>
+"😭 illegal levels of cuteness detected",
+
+memory:()=>
+"📸 old memory unlocked",
+
+distance:()=>
+"💞 distance losing again",
+
+compatibility:()=>
+`💞 Compatibility: ${Math.floor(Math.random()*100)}%`,
+
+firstmove:()=>
+"👀 Rose probably",
+
+future:()=>
+"🏠 future detected: house + pets",
+
+stare:()=>Math.random()>.5
+?
+"👁 Lampy blinked first 😭"
+:
+"👁 Rose blinked first 😭",
+
+stealheart:()=>
+"💘 heart stolen successfully",
+
+fate:()=>
+"✨ fate approved",
+
+blush:()=>
+"🥺 blush overload",
+
+mystery:()=>{
 
 const x=[
 
-"Rose stole fries 😭",
-
-"minecraft wedding",
-
-"Mochi became mayor"
+"📦 mystery cookie",
+"🧸 tiny plush",
+"🍪 half eaten cookie",
+"💖 secret love note"
 
 ];
 
-return message.reply(
-
-`💭 ${
-x[
+return x[
 Math.floor(
 Math.random()*x.length
 )
-]
-}`
+];
 
-);
+},
 
-}
+wish:()=>
+"🌠 wish stored safely",
 
+obsessed:()=>
+`${Math.floor(Math.random()*100)}% obsessed 😭`,
 
+mochi:()=>{
 
-if(cmd==="chaos"){
+const x=[
 
-return message.reply(
-"💥 Cat invasion"
-);
+"🐱 Mochi demands attention",
 
-}
+"🐱 Mochi stole food",
 
+"🐱 Mochi is staring",
 
+"🐱 Mochi fell asleep"
 
-if(cmd==="cuddle"){
+];
 
-return message.reply(
-"🫂 cuddle meter: 97%"
-);
-
-}
-
-
-
-if(cmd==="kissmeter"){
-
-return message.reply(
-`💋 ${Math.floor(Math.random()*100)}%`
-);
+return x[
+Math.floor(
+Math.random()*x.length
+)
+];
 
 }
 
-
-
-if(cmd==="sleepcall"){
-
-return message.reply(
-"🌙 survived another sleep call 😭"
-);
-
-}
+};
 
 
 
-if(cmd==="vibes"){
+if(responses[cmd]){
 
 return message.reply(
-"✨ soft + sleepy"
-);
-
-}
-
-
-
-if(cmd==="pet"){
-
-return message.reply(
-"🐱 Mochi is eepy"
-);
-
-}
-
-
-
-if(cmd==="adopt"){
-
-return message.reply(
-"🐰 Mochi joined"
-);
-
-}
-
-
-
-if(cmd==="dailygift"){
-
-return message.reply(
-"🎁 +50 love coins"
-);
-
-}
-
-
-
-if(cmd==="lovebank"){
-
-return message.reply(
-"💰 250 coins"
-);
-
-}
-
-
-
-if(cmd==="fortune2"){
-
-return message.reply(
-"🔮 tomorrow = chaos"
-);
-
-}
-
-
-
-if(cmd==="latecall"){
-
-return message.reply(
-"📞 3am energy"
-);
-
-}
-
-
-
-if(cmd==="dateidea"){
-
-return message.reply(
-"🎮 roblox + vc"
-);
-
-}
-
-
-
-if(cmd==="cringe"){
-
-return message.reply(
-"😭 illegal cuteness detected"
-);
-
-}
-
-
-
-if(cmd==="memory"){
-
-return message.reply(
-"📸 old memory unlocked"
-);
-
-}
-
-
-
-if(cmd==="distance"){
-
-return message.reply(
-"💞 distance losing again"
-);
-
-}
-
-
-
-if(cmd==="compatibility"){
-
-return message.reply(
-`${Math.floor(Math.random()*100)}%`
-);
-
-}
-
-
-
-if(cmd==="firstmove"){
-
-return message.reply(
-"👀 Rose probably"
-);
-
-}
-
-
-
-if(cmd==="future"){
-
-return message.reply(
-"🏠 house + pets"
-);
-
-}
-
-
-
-if(cmd==="stare"){
-
-return message.reply(
-Math.random()>.5
-?
-"👁 Lampy blinked"
-:
-"👁 Rose blinked"
-);
-
-}
-
-
-
-if(cmd==="stealheart"){
-
-return message.reply(
-"💘 heart stolen"
-);
-
-}
-
-
-
-if(cmd==="fate"){
-
-return message.reply(
-"✨ fate approved"
-);
-
-}
-
-
-
-if(cmd==="blush"){
-
-return message.reply(
-"🥺 blush overload"
-);
-
-}
-
-
-
-if(cmd==="mystery"){
-
-return message.reply(
-"📦 mystery cookie"
-);
-
-}
-
-
-
-if(cmd==="wish"){
-
-return message.reply(
-"🌠 wish saved"
-);
-
-}
-
-
-
-if(cmd==="obsessed"){
-
-return message.reply(
-`${Math.floor(Math.random()*100)}% obsessed 😭`
-);
-
-}
-
-
-
-if(cmd==="mochi"){
-
-return message.reply(
-"🐱 Mochi demands attention"
+responses[cmd]()
 );
 
 }
