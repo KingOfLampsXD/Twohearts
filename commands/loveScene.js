@@ -14,8 +14,7 @@ async execute(message,args){
 try{
 
 const scene=
-args[0]?.toLowerCase() ||
-"cherry";
+args[0]?.toLowerCase() || "cherry";
 
 
 const backgrounds={
@@ -50,10 +49,14 @@ const ctx=
 canvas.getContext("2d");
 
 
+// background
+
 const bg=
 await Canvas.loadImage(
-backgrounds[scene]||
+
+backgrounds[scene] ||
 backgrounds.cherry
+
 );
 
 ctx.drawImage(
@@ -65,54 +68,133 @@ bg,
 );
 
 
+// actual minecraft body renders
+
 const lamp=
 await Canvas.loadImage(
-"./skins/KingOfLampsXD.png"
+"https://mc-heads.net/body/KingOfLampsXD/left"
 );
 
 const rose=
 await Canvas.loadImage(
-"./skins/RoseDazzler.png"
+"https://mc-heads.net/body/RoseDazzler/right"
 );
 
+
+// little shadow things
+
+ctx.globalAlpha=.25;
+
+ctx.fillStyle="black";
+
+ctx.beginPath();
+
+ctx.ellipse(
+340,
+500,
+100,
+30,
+0,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+ctx.beginPath();
+
+ctx.ellipse(
+650,
+500,
+100,
+30,
+0,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+ctx.globalAlpha=1;
+
+
+// characters
 
 ctx.drawImage(
 lamp,
 220,
-180,
+170,
 220,
-220
+320
 );
 
 ctx.drawImage(
 rose,
-560,
-180,
+540,
+170,
 220,
-220
+320
 );
 
 
+// title
+
 ctx.font=
-"40px sans-serif";
+"bold 42px sans-serif";
 
 ctx.fillStyle=
 "white";
 
-ctx.fillText(
+ctx.strokeStyle=
+"black";
+
+ctx.lineWidth=6;
+
+ctx.strokeText(
 "💞 Lampy + Rose",
-300,
-90
+280,
+70
 );
 
+ctx.fillText(
+"💞 Lampy + Rose",
+280,
+70
+);
+
+
+// bottom text
 
 ctx.font=
 "28px sans-serif";
 
+ctx.strokeText(
+"Twohearts third wheeling 😭",
+280,
+550
+);
+
 ctx.fillText(
 "Twohearts third wheeling 😭",
-300,
-540
+280,
+550
+);
+
+
+// hearts
+
+ctx.font="45px sans-serif";
+
+ctx.fillText(
+"💖",
+470,
+220
+);
+
+ctx.fillText(
+"✨",
+510,
+180
 );
 
 
@@ -142,6 +224,10 @@ new EmbedBuilder()
 "💞 Couple Scene"
 )
 
+.setDescription(
+`Scene: ${scene}`
+)
+
 .setImage(
 "attachment://scene.png"
 );
@@ -158,7 +244,6 @@ attachment
 ]
 
 });
-
 
 }catch(err){
 
