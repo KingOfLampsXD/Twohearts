@@ -9,38 +9,24 @@ async execute(message,args){
 const scene=
 args[0]?.toLowerCase() || "cherry";
 
-
-const scenes={
+const prompts={
 
 cherry:
-`Minecraft style romantic artwork of Lampy and Rose together beneath glowing cherry blossom trees, pink petals floating, lanterns, heart particles, sunset lighting, cozy atmosphere, adorable couple energy, cinematic`,
+"Minecraft style romantic artwork of Lampy and Rose sitting together under glowing cherry blossom trees, lanterns, pink petals, sunset, cozy couple energy",
 
 campfire:
-`Minecraft style Lampy and Rose sitting beside a warm campfire at night, stars above, lanterns, cozy romantic scene`,
+"Minecraft style Lampy and Rose beside a campfire under stars, romantic atmosphere",
 
-night:
-`Minecraft style Lampy and Rose together under moonlight and stars, dreamy romantic atmosphere`,
+moon:
+"Minecraft style Lampy and Rose together on a rooftop under moonlight and lanterns",
 
-snow:
-`Minecraft style Lampy and Rose holding hands in a snowy village at night, cozy winter romance`,
-
-sunset:
-`Minecraft style Lampy and Rose sitting near a lake watching sunset together, cinematic romantic energy`
+sleepcall:
+"Minecraft style Lampy and Rose sleeping during a late-night call, cozy room atmosphere"
 
 };
 
 
 try{
-
-
-if(!process.env.REPLICATE_API_TOKEN){
-
-return message.reply(
-"😭 replicate token missing"
-);
-
-}
-
 
 await message.reply(
 "okay okay 😭 making you two adorable again..."
@@ -50,21 +36,15 @@ await message.reply(
 const create=
 await axios.post(
 
-"https://api.replicate.com/v1/predictions",
+"https://api.replicate.com/v1/models/black-forest-labs/flux-schnell/predictions",
 
 {
-
-version:
-"black-forest-labs/flux-schnell",
 
 input:{
 
 prompt:
-scenes[scene] ||
-scenes.cherry,
-
-aspect_ratio:
-"16:9"
+prompts[scene] ||
+prompts.cherry
 
 }
 
@@ -87,15 +67,13 @@ Authorization:
 );
 
 
-const predictionId=
+const id=
 create.data.id;
 
 let image=null;
 
 
-// wait for generation
-
-for(let i=0;i<25;i++){
+for(let i=0;i<20;i++){
 
 await new Promise(
 r=>setTimeout(r,2000)
@@ -105,7 +83,7 @@ r=>setTimeout(r,2000)
 const poll=
 await axios.get(
 
-`https://api.replicate.com/v1/predictions/${predictionId}`,
+`https://api.replicate.com/v1/predictions/${id}`,
 
 {
 
@@ -150,7 +128,7 @@ poll.data.error ||
 if(!image){
 
 return message.reply(
-"😭 image took too long try again"
+"😭 image took too long"
 );
 
 }
@@ -159,7 +137,7 @@ return message.reply(
 return message.channel.send({
 
 content:
-"Twohearts cooked something 😭💞",
+"Twohearts cooked 😭💞",
 
 files:[
 image
@@ -171,21 +149,14 @@ image
 }catch(err){
 
 console.log(
-"LOVE SCENE ERROR:"
-);
-
-console.log(
 err.response?.data || err
 );
-
 
 return message.reply(
 
 `😭 ${
 err.response?.data?.detail ||
-err.response?.data?.error ||
-err.message ||
-"something broke"
+err.message
 }`
 
 );
