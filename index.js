@@ -37,16 +37,54 @@ const commands=new Map();
 
 
 
+// CREATE DATA
+
+if(
+!fs.existsSync('./data')
+){
+
+fs.mkdirSync(
+'./data'
+);
+
+}
+
+
+if(
+
+!fs.existsSync(
+'./data/lovepoints.json'
+)
+
+){
+
+fs.writeFileSync(
+
+'./data/lovepoints.json',
+
+'{}'
+
+);
+
+}
+
+
+
 // COMMAND LOADER
 
 try{
 
 const files=
 
-fs.readdirSync('./commands')
+fs.readdirSync(
+'./commands'
+)
 
 .filter(
-file=>file.endsWith('.js')
+
+file=>
+file.endsWith('.js')
+
 );
 
 
@@ -55,6 +93,7 @@ for(const file of files){
 try{
 
 const command=
+
 require(
 `./commands/${file}`
 );
@@ -63,23 +102,32 @@ require(
 if(command?.name){
 
 commands.set(
-command.name.toLowerCase(),
+
+command.name
+.toLowerCase(),
+
 command
+
 );
 
 
 // ALIASES
 
-if(command.aliases){
+if(
+command.aliases
+){
 
 for(
+
 const alias
 of command.aliases
+
 ){
 
 commands.set(
 
-alias.toLowerCase(),
+alias
+.toLowerCase(),
 
 command
 
@@ -142,6 +190,7 @@ console.log(
 
 
 
+
 client.on(
 
 'messageCreate',
@@ -153,7 +202,144 @@ message.author.bot
 )return;
 
 
+
 try{
+
+
+// LOVE LEVEL SYSTEM
+
+const loveData=
+
+JSON.parse(
+
+fs.readFileSync(
+
+'./data/lovepoints.json',
+
+'utf8'
+
+)
+
+);
+
+
+const id=
+'lampyrose';
+
+
+if(
+!loveData[id]
+){
+
+loveData[id]={
+
+points:0,
+
+level:1,
+
+lastUser:null,
+
+lastMessage:0
+
+};
+
+}
+
+
+const now=
+Date.now();
+
+
+
+if(
+
+message.content.length>5 &&
+
+loveData[id]
+.lastUser
+!==message.author.id &&
+
+now-
+loveData[id]
+.lastMessage
+
+>
+
+10000
+
+){
+
+loveData[id]
+.points+=3;
+
+
+loveData[id]
+.lastUser=
+message.author.id;
+
+
+loveData[id]
+.lastMessage=
+now;
+
+
+const need=
+
+loveData[id]
+.level
+
+*
+
+100;
+
+
+
+if(
+
+loveData[id]
+.points
+
+>=
+
+need
+
+){
+
+loveData[id]
+.level++;
+
+
+message.channel.send(
+
+`💞 LEVEL UP 😭
+
+Lampy + Rose reached level ${loveData[id].level}`
+
+);
+
+}
+
+}
+
+
+
+fs.writeFileSync(
+
+'./data/lovepoints.json',
+
+JSON.stringify(
+
+loveData,
+
+null,
+
+2
+
+)
+
+);
+
+
 
 
 // AI CHANNEL
@@ -188,6 +374,7 @@ id,
 
 
 const history=
+
 memory.get(id);
 
 
@@ -237,53 +424,46 @@ RoseDazzler = Rose
 
 You already know Lampy and Rose deeply love each other.
 
-You already know them extremely well.
-
 Never act surprised.
 
 Personality:
 
-- warm
-- human
-- funny sometimes
-- playful
-- observant
-- caring
 - natural
+- warm
+- observant
+- playful
+- cozy
+- funny sometimes
 
 Rules:
 
-- talk like a REAL Discord friend
 - short-medium replies
-- react naturally
-- don't narrate thoughts
-- don't explain behavior
-- don't make random stories
-- don't act like customer support
-- don't overuse emojis
+- match mood
 - if Hinglish -> Hinglish
 - if English -> English
-- match mood
+- don't narrate thoughts
+- don't explain behavior
+- don't act like customer support
 
 Examples:
 
 Lampy:
-"Rose?"
+Rose?
 
 You:
-"probably afk 😭"
+probably afk 😭
 
 Rose:
-"baby"
+baby
 
 You:
-"aww 😭 kya hua"
+aww 😭 kya hua
 
 Lampy:
-"Twohearts noob"
+Twohearts noob
 
 You:
-"BRO 😭 says who"
+BRO 😭 says who
 
 `
 
@@ -302,7 +482,9 @@ response
 ?.choices?.[0]
 ?.message?.content
 
-||"😭 my brain lagged";
+||
+
+"😭 brain lag moment";
 
 
 history.push({
@@ -334,12 +516,13 @@ if(
 return;
 
 
-
 const args=
 
 message.content
 
-.slice(prefix.length)
+.slice(
+prefix.length
+)
 
 .trim()
 
