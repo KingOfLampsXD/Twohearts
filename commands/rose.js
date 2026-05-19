@@ -6,7 +6,7 @@ async execute(message){
 
 const words=[
 
-"my baby 😭💞",
+"my baby 💞",
 "my janu",
 "meri jaan",
 "meri pookie",
@@ -18,7 +18,7 @@ const words=[
 "my cutie",
 "my sunshine",
 "my pretty girl",
-"my wife 😭",
+"my wife ",
 "my forever",
 "meri life",
 "my comfort",
@@ -34,13 +34,13 @@ const words=[
 "my lovebug",
 "my softie",
 "my snuggle bug",
-"my sweet potato 😭",
+"my sweet potato ",
 "my tiny chaos",
 "my teddy",
 "my happiness",
 "my soul",
 "my cupcake",
-"my little goblin 😭",
+"my little goblin ",
 "my beautiful human",
 "my pretty soul",
 "my star",
