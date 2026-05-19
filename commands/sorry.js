@@ -26,9 +26,9 @@ embeds:[embed]
 
 const scenes=[
 
-"💭 *Lampy thinking...*",
+" *Lampy thinking...*",
 
-"🥺 nahi krne wala aage se...",
+" nahi krne wala aage se...",
 
 "🤍 apki kasam...",
 
@@ -36,7 +36,7 @@ const scenes=[
 
 "💞 i love you...",
 
-"😭 sorry for hurting you"
+" sorry for hurting you"
 
 ];
 
