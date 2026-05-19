@@ -1,4 +1,6 @@
-const {EmbedBuilder}=require("discord.js");
+const {
+EmbedBuilder
+}=require("discord.js");
 
 module.exports={
 
@@ -6,72 +8,131 @@ name:"sorry",
 
 async execute(message){
 
-const embed=new EmbedBuilder()
+const embed=
+
+new EmbedBuilder()
 
 .setColor("#ff7eb6")
 
-.setTitle("💌 Message loading...")
+.setTitle(
+"💌 Loading apology..."
+)
 
-.setDescription("...")
+.setDescription(
+"💭 ..."
+)
 
 .setFooter({
 text:"Twohearts 😭"
 });
 
+
 const msg=
+
 await message.reply({
-embeds:[embed]
+
+embeds:[
+embed
+]
+
 });
 
 
 const scenes=[
 
-" *Lampy thinking...*",
+"💭 *Lampy thinking...*",
 
-" nahi krne wala aage se...",
+"🥺 aage se nahi kru ga... ye pakka",
 
-"🤍 apki kasam...",
+"🤍 sachi me...",
+
+"😭 agar me fir kru...",
+
+"😔 toh mujhe insult karke chhod dena chahiye aap...",
+
+"🫶 apki kasam...",
 
 "— Lampy",
 
-"💞 i love you...",
+"💞 i love you",
 
-" sorry for hurting you"
+"😭 sorry for hurting you"
 
 ];
 
 
-for(let i=0;i<scenes.length;i++){
+
+for(
+
+let i=0;
+
+i<scenes.length;
+
+i++
+
+){
 
 await new Promise(
-r=>setTimeout(r,2000)
+
+r=>
+
+setTimeout(
+r,
+1800
+)
+
 );
 
-embed.setDescription(
+
+embed
+
+.setTitle(
+"💌 Sorry Letter"
+)
+
+.setDescription(
 
 scenes
-.slice(0,i+1)
-.join("\n\n")
+
+.slice(
+0,
+i+1
+)
+
+.join(
+
+"\n\n"
+
+)
 
 );
 
-embed.setTitle(
-"💌 Sorry Letter"
-);
 
 await msg.edit({
-embeds:[embed]
+
+embeds:[
+embed
+]
+
 });
 
 }
 
 
 embed.setFooter({
-text:"Lampy ❤️ Rose"
+
+text:
+"Lampy ❤️ Rose"
+
 });
 
+
 await msg.edit({
-embeds:[embed]
+
+embeds:[
+embed
+]
+
 });
 
 }
