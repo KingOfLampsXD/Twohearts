@@ -1,7 +1,9 @@
 // commands/rep.js
 
 const { EmbedBuilder } = require('discord.js');
-const reputation = require('../models/reputation');
+
+// Simple reputation storage
+const reputation = new Map();
 
 module.exports = {
   name: "rep",
@@ -39,31 +41,32 @@ module.exports = {
     // Add rep
     reputation.set(user.id, currentRep + 1);
 
-    // Reputation levels
-    let title;
-
+    // Total rep
     const totalRep =
       reputation.get(user.id);
 
+    // Reputation rank
+    let rank;
+
     if (totalRep >= 100) {
-      title = "👑 Legendary Human";
+      rank = "👑 Legendary";
     } else if (totalRep >= 50) {
-      title = "💖 Loved By Everyone";
+      rank = "💖 Loved";
     } else if (totalRep >= 25) {
-      title = "🌸 Trusted Person";
+      rank = "🌸 Trusted";
     } else if (totalRep >= 10) {
-      title = "✨ Friendly Soul";
+      rank = "✨ Friendly";
     } else {
-      title = "🌱 New Reputation";
+      rank = "🌱 Beginner";
     }
 
     // Cute messages
     const messages = [
-      "Kindness always shines 💖",
-      "Good people deserve appreciation 🌸",
-      "Positive vibes detected ✨",
-      "Someone earned respect today 🫶",
-      "Being kind makes a difference 🌹"
+      "Kindness matters 💖",
+      "Positive vibes detected 🌸",
+      "Someone earned respect today ✨",
+      "Rose appreciates kindness 🌹",
+      "A good action was noticed 🫶"
     ];
 
     const randomMessage =
@@ -83,8 +86,8 @@ module.exports = {
           inline: true
         },
         {
-          name: "🎀 Reputation Title",
-          value: title,
+          name: "🎀 Rank",
+          value: rank,
           inline: true
         }
       )
