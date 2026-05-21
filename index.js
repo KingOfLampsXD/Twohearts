@@ -1,4 +1,4 @@
-const{
+const {
 Client,
 GatewayIntentBits
 }=require("discord.js");
@@ -40,31 +40,19 @@ const memory=new Map();
 
 // DATA
 
-if(
-!fs.existsSync("./data")
-){
-
-fs.mkdirSync(
-"./data"
-);
-
-}
+if(!fs.existsSync("./data"))
+fs.mkdirSync("./data");
 
 
 if(
-
 !fs.existsSync(
 "./data/lovepoints.json"
 )
-
 ){
 
 fs.writeFileSync(
-
 "./data/lovepoints.json",
-
 "{}"
-
 );
 
 }
@@ -79,39 +67,29 @@ try{
 const files=
 
 fs.readdirSync(
-
 "./commands"
-
 )
 
 .filter(
 
 f=>
-
 f.endsWith(".js")
 
 );
 
 
-for(
-const file
-of files
-){
+for(const file of files){
 
 try{
 
 const command=
 
 require(
-
 `./commands/${file}`
-
 );
 
 
-if(
-command?.name
-){
+if(command?.name){
 
 commands.set(
 
@@ -121,7 +99,6 @@ command.name
 command
 
 );
-
 
 
 if(
@@ -148,9 +125,7 @@ command
 
 
 console.log(
-
 `Loaded ${file}`
-
 );
 
 }
@@ -158,9 +133,7 @@ console.log(
 }catch(err){
 
 console.log(
-
 `Skipped ${file}`
-
 );
 
 console.log(err);
@@ -180,7 +153,6 @@ console.log(
 
 
 
-
 client.once(
 
 "clientReady",
@@ -194,7 +166,7 @@ console.log(
 );
 
 
-// ROOMMATE EVENTS 😭
+// ROOMMATE MODE 😭
 
 setInterval(
 
@@ -207,7 +179,6 @@ const channel=
 client.channels.cache.find(
 
 c=>
-
 c.name==="general"
 
 );
@@ -217,26 +188,82 @@ if(!channel)
 return;
 
 
-const events=[
+const a=
+Math.floor(Math.random()*20)+1;
 
-'💞 QUICK\nFirst person to say "mine 😭" wins',
+const b=
+Math.floor(Math.random()*20)+1;
 
-'🌙 3AM QUESTION\nWhat do you secretly miss rn?',
 
-'👀 WHO KNOWS WHO BETTER?\nWho confessed first?',
+const words=[
 
-'💋 Type:\n💞💞💞\nFAST 😭',
+"ILoveRose😭",
 
-'🐱 Mochi stole something\nGuess where 😭',
+"Stay5MoreMins",
 
-'🫶 VC mission:\nstay 5 more mins',
+"MochiAteCookie",
 
-'😭 Someone say one cute thing NOW'
+"LampyLovesRose",
+
+"DistanceLosingAgain",
+
+"SleepCallGoblin"
 
 ];
 
 
-const event=
+const events=[
+
+
+`🧠 QUICK MATH 😭
+
+${a}+${b}= ?`,
+
+
+`⌨️ TYPING RACE
+
+Type:
+
+${
+words[
+Math.floor(
+Math.random()*
+words.length
+)
+]
+}
+
+FAST 😭`,
+
+
+`💞 COUPLE QUESTION
+
+What's one thing you secretly miss rn?`,
+
+
+`🌙 Finish:
+
+stay 5 more mins because ____`,
+
+
+`👀 WHO FELL FIRST 😭`,
+
+
+`🐱 Mochi stole:
+
+🍪 Cookie
+🎮 Controller
+🧸 Pillow
+
+Guess 😭`,
+
+
+`💌 Say one cute thing NOW 😭`
+
+];
+
+
+channel.send(
 
 events[
 
@@ -245,14 +272,15 @@ Math.random()*
 events.length
 )
 
-];
+]
 
-
-channel.send(
-event
 );
 
-}catch{}
+}catch(err){
+
+console.log(err);
+
+}
 
 },
 
@@ -263,6 +291,7 @@ event
 }
 
 );
+
 
 
 
@@ -282,7 +311,7 @@ message.author.bot
 try{
 
 
-// LOVE LEVEL
+// LOVE XP
 
 const data=
 
@@ -337,10 +366,7 @@ data[id]
 now-
 data[id]
 .lastMessage
-
->
-
-10000
+>10000
 
 ){
 
@@ -361,19 +387,12 @@ now;
 const need=
 
 data[id]
-.level
-*100;
+.level*100;
 
 
 if(
-
 data[id]
-.points
-
->=
-
-need
-
+.points>=need
 ){
 
 data[id]
@@ -408,16 +427,16 @@ null,
 
 
 
-// AI
+// AI CHANNEL
 
 if(
 
-message.channel.name===
-aiChannel
+message.channel.name===aiChannel
 
 ){
 
-await message.channel.sendTyping();
+await
+message.channel.sendTyping();
 
 
 const id=
@@ -453,11 +472,9 @@ content:
 
 if(
 history.length>12
-){
-
+)
 history.shift();
 
-}
 
 
 const response=
@@ -477,28 +494,26 @@ content:`
 
 You are Twohearts.
 
-You are Lampy + Rose's longtime third-wheel roommate.
+Lampy=KingOfLampsXD
+Rose=RoseDazzler
 
-KingOfLampsXD=Lampy
-RoseDazzler=Rose
+You are their longtime third-wheel roommate.
 
-You already know them.
+You already know everything.
 
 Never act surprised.
 
 Be:
 
--natural
--warm
--playful
--observant
--cozy
+warm
+playful
+cozy
+human
+observant
 
 Short replies.
 
 Hinglish if needed.
-
-Examples:
 
 Lampy:
 Rose?
@@ -561,12 +576,9 @@ reply
 // COMMANDS
 
 if(
-
 !message.content
 .startsWith(prefix)
-
 )
-
 return;
 
 
@@ -602,10 +614,8 @@ return;
 
 
 await command.execute(
-
 message,
 args
-
 );
 
 
@@ -628,5 +638,4 @@ message.reply(
 
 
 client.login(
-process.env.TOKEN
-);
+process.env.TOKEN);
