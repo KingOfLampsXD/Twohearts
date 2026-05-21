@@ -40,19 +40,29 @@ const memory=new Map();
 
 // DATA
 
-if(!fs.existsSync("./data"))
+if(
+!fs.existsSync("./data")
+){
+
 fs.mkdirSync("./data");
+
+}
 
 
 if(
+
 !fs.existsSync(
 "./data/lovepoints.json"
 )
+
 ){
 
 fs.writeFileSync(
+
 "./data/lovepoints.json",
+
 "{}"
+
 );
 
 }
@@ -60,19 +70,17 @@ fs.writeFileSync(
 
 
 
-// COMMAND LOADER
 
-try{
+// COMMAND LOADER
 
 const files=
 
-fs.readdirSync(
-"./commands"
-)
+fs.readdirSync("./commands")
 
 .filter(
 
 f=>
+
 f.endsWith(".js")
 
 );
@@ -85,11 +93,15 @@ try{
 const command=
 
 require(
+
 `./commands/${file}`
+
 );
 
 
-if(command?.name){
+if(!command?.name)
+continue;
+
 
 commands.set(
 
@@ -128,8 +140,6 @@ console.log(
 `Loaded ${file}`
 );
 
-}
-
 }catch(err){
 
 console.log(
@@ -142,13 +152,6 @@ console.log(err);
 
 }
 
-}catch{
-
-console.log(
-"No commands folder"
-);
-
-}
 
 
 
@@ -161,12 +164,12 @@ client.once(
 
 console.log(
 
-`Logged in as ${client.user.tag}`
+`${client.user.tag} online 😭`
 
 );
 
 
-// ROOMMATE MODE 😭
+// ROOMMATE MODE
 
 setInterval(
 
@@ -179,6 +182,7 @@ const channel=
 client.channels.cache.find(
 
 c=>
+
 c.name==="general"
 
 );
@@ -188,16 +192,97 @@ if(!channel)
 return;
 
 
+const type=
+
+Math.floor(
+Math.random()*3
+);
+
+
+
+// MATH
+
+if(type===0){
+
 const a=
 Math.floor(Math.random()*20)+1;
 
 const b=
 Math.floor(Math.random()*20)+1;
 
+const answer=
+a+b;
+
+
+await channel.send(
+
+`🧠 QUICK MATH 😭
+
+${a}+${b}=?
+
+30 sec`
+
+);
+
+
+const collector=
+
+channel.createMessageCollector({
+
+time:30000
+
+});
+
+
+collector.on(
+
+"collect",
+
+m=>{
+
+if(
+m.author.bot
+)return;
+
+
+if(
+Number(m.content)
+===answer
+){
+
+channel.send(
+
+`🏆 ${m.author}
+
+correct 😭
+
++10 Love XP`
+
+);
+
+collector.stop();
+
+}
+
+}
+
+);
+
+
+return;
+
+}
+
+
+
+
+// TYPING GAME
+
+if(type===1){
 
 const words=[
 
-"ILoveRose😭",
+"ILoveRose",
 
 "Stay5MoreMins",
 
@@ -212,42 +297,99 @@ const words=[
 ];
 
 
-const events=[
+const word=
 
-
-`🧠 QUICK MATH 😭
-
-${a}+${b}= ?`,
-
-
-`⌨️ TYPING RACE
-
-Type:
-
-${
 words[
 Math.floor(
 Math.random()*
 words.length
 )
-]
+];
+
+
+await channel.send(
+
+`⌨️ TYPING RACE
+
+Type:
+
+${word}
+
+FAST 😭`
+
+);
+
+
+const collector=
+
+channel.createMessageCollector({
+
+time:20000
+
+});
+
+
+collector.on(
+
+"collect",
+
+m=>{
+
+if(
+m.author.bot
+)return;
+
+
+if(
+m.content===word
+){
+
+channel.send(
+
+`🏆 ${m.author}
+
+won 😭`
+
+);
+
+collector.stop();
+
 }
 
-FAST 😭`,
+}
+
+);
 
 
-`💞 COUPLE QUESTION
+return;
 
-What's one thing you secretly miss rn?`,
-
-
-`🌙 Finish:
-
-stay 5 more mins because ____`,
+}
 
 
-`👀 WHO FELL FIRST 😭`,
 
+
+// MOCHI
+
+const items=[
+
+"cookie",
+"controller",
+"pillow"
+
+];
+
+
+const item=
+
+items[
+Math.floor(
+Math.random()*
+items.length
+)
+];
+
+
+await channel.send(
 
 `🐱 Mochi stole:
 
@@ -255,24 +397,57 @@ stay 5 more mins because ____`,
 🎮 Controller
 🧸 Pillow
 
-Guess 😭`,
+Guess 😭`
+
+);
 
 
-`💌 Say one cute thing NOW 😭`
+const collector=
 
-];
+channel.createMessageCollector({
 
+time:30000
+
+});
+
+
+collector.on(
+
+"collect",
+
+m=>{
+
+if(
+m.author.bot
+)return;
+
+
+if(
+
+m.content
+.toLowerCase()
+
+===item
+
+){
 
 channel.send(
 
-events[
+`🏆 ${m.author}
 
-Math.floor(
-Math.random()*
-events.length
-)
+FOUND IT 😭
 
-]
+Mochi stole:
+
+${item}`
+
+);
+
+collector.stop();
+
+}
+
+}
 
 );
 
@@ -291,6 +466,7 @@ console.log(err);
 }
 
 );
+
 
 
 
@@ -339,11 +515,8 @@ if(
 data[id]={
 
 points:0,
-
 level:1,
-
 lastUser:null,
-
 lastMessage:0
 
 };
@@ -366,7 +539,10 @@ data[id]
 now-
 data[id]
 .lastMessage
->10000
+
+>
+
+10000
 
 ){
 
@@ -384,15 +560,14 @@ data[id]
 now;
 
 
-const need=
-
-data[id]
-.level*100;
-
-
 if(
+
 data[id]
-.points>=need
+.points>=
+
+data[id]
+.level*100
+
 ){
 
 data[id]
@@ -401,9 +576,11 @@ data[id]
 
 message.channel.send(
 
-`💞 LEVEL UP 😭
+`💞 LEVEL UP
 
-Lampy + Rose reached level ${data[id].level}`
+Level:
+
+${data[id].level}`
 
 );
 
@@ -427,16 +604,16 @@ null,
 
 
 
-// AI CHANNEL
+// AI
 
 if(
 
-message.channel.name===aiChannel
+message.channel.name===
+aiChannel
 
 ){
 
-await
-message.channel.sendTyping();
+await message.channel.sendTyping();
 
 
 const id=
@@ -497,41 +674,20 @@ You are Twohearts.
 Lampy=KingOfLampsXD
 Rose=RoseDazzler
 
-You are their longtime third-wheel roommate.
+Longtime third-wheel roommate.
 
-You already know everything.
-
-Never act surprised.
-
-Be:
-
-warm
+Warm
 playful
 cozy
-human
-observant
+natural
 
 Short replies.
-
-Hinglish if needed.
 
 Lampy:
 Rose?
 
 You:
 probably afk 😭
-
-Rose:
-baby
-
-You:
-aww 😭 kya hua
-
-Lampy:
-Twohearts noob
-
-You:
-BRO 😭 says who
 
 `
 
@@ -576,9 +732,12 @@ reply
 // COMMANDS
 
 if(
+
 !message.content
 .startsWith(prefix)
+
 )
+
 return;
 
 
@@ -598,7 +757,6 @@ prefix.length
 const commandName=
 
 args.shift()
-
 ?.toLowerCase();
 
 
