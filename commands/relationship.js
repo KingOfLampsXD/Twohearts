@@ -1,16 +1,13 @@
-const {
-EmbedBuilder
-}=require("discord.js");
+const answers=new Map();
 
 module.exports={
 
 name:"confess",
 
 aliases:[
-
 "3am",
-"heartbeatrace"
-
+"heartbeatrace",
+"answer"
 ],
 
 async execute(message,args){
@@ -18,28 +15,41 @@ async execute(message,args){
 const cmd=
 
 message.content
-
 .toLowerCase()
-
 .replace(/^rl!/,"")
-
 .split(/ +/)[0];
 
 
 
 if(cmd==="confess"){
 
+answers.clear();
+
 await message.reply(
 
 `💞 Confession Night
 
-You have 30 sec.
+You BOTH have 30 sec
 
-Reply with:
+Reply:
 
-RL!answer your message
+RL!answer your text
 
-without seeing the other person's answer 😭`
+Secret answers 😭`
+
+);
+
+
+setTimeout(()=>{
+
+const users=[...answers.keys()];
+
+
+if(users.length<2){
+
+message.channel.send(
+
+"😭 confession failed not enough answers"
 
 );
 
@@ -48,105 +58,72 @@ return;
 }
 
 
-
-if(cmd==="3am"){
-
-const questions=[
-
-'if you were here rn i would ____',
-
-'one thing i secretly miss is ____',
-
-'late night thought: ____',
-
-'if distance vanished rn: ____',
-
-'stay 5 more mins because ____'
-
-];
-
-
-return message.reply(
-
-`🌙 3AM Mode 😭
-
-${
-
-questions[
-Math.floor(
-Math.random()*
-questions.length
-)
-]
-
-}`
-
-);
-
-}
-
-
-
-if(
-cmd==="heartbeatrace"
-){
-
-const msg=
-
-await message.reply(
-
-`❤️ HEARTBEAT RACE
-
-Spam ❤️ reaction
-
-15 sec 😭`
-
-);
-
-
-await msg.react(
-"❤️"
-);
-
-
-setTimeout(
-
-async()=>{
-
-const fetched=
-
-await msg.fetch();
-
-
-const reaction=
-
-fetched.reactions.cache.get(
-"❤️"
-);
-
-
-const count=
-
-reaction?.count-1 || 0;
+const values=
+[...answers.entries()];
 
 
 message.channel.send(
 
-`😭 HEART ATTACK ENERGY
+`💌 Hidden Answers Revealed
 
-❤️:
-${count}`
+${values[0][0]}:
+
+${values[0][1]}
+
+💞
+
+${values[1][0]}:
+
+${values[1][1]}
+
++50 Love Points 😭`
 
 );
 
-},
+answers.clear();
 
-15000
+},30000);
+
+
+return;
+
+}
+
+
+
+if(cmd==="answer"){
+
+const text=
+args.join(" ");
+
+
+if(!text){
+
+return message.reply(
+
+"😭 say something"
+
+);
+
+}
+
+
+answers.set(
+
+message.author.username,
+
+text
+
+);
+
+
+return message.reply(
+
+"🤫 answer saved"
 
 );
 
 }
 
 }
-
 };
