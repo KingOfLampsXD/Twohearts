@@ -1,10 +1,10 @@
-const {
+const{
 Client,
 GatewayIntentBits
-}=require('discord.js');
+}=require("discord.js");
 
-const fs=require('fs');
-const OpenAI=require('openai');
+const fs=require("fs");
+const OpenAI=require("openai");
 
 const client=new Client({
 
@@ -21,30 +21,31 @@ GatewayIntentBits.MessageContent
 
 const openai=new OpenAI({
 
-apiKey:process.env.OPENROUTER_API_KEY,
+apiKey:
+process.env.OPENROUTER_API_KEY,
 
 baseURL:
-'https://openrouter.ai/api/v1'
+"https://openrouter.ai/api/v1"
 
 });
 
 
-const prefix='RL!';
-const aiChannel='twohearts-ai';
+const prefix="RL!";
+const aiChannel="twohearts-ai";
 
-const memory=new Map();
 const commands=new Map();
+const memory=new Map();
 
 
 
-// CREATE DATA
+// DATA
 
 if(
-!fs.existsSync('./data')
+!fs.existsSync("./data")
 ){
 
 fs.mkdirSync(
-'./data'
+"./data"
 );
 
 }
@@ -53,20 +54,21 @@ fs.mkdirSync(
 if(
 
 !fs.existsSync(
-'./data/lovepoints.json'
+"./data/lovepoints.json"
 )
 
 ){
 
 fs.writeFileSync(
 
-'./data/lovepoints.json',
+"./data/lovepoints.json",
 
-'{}'
+"{}"
 
 );
 
 }
+
 
 
 
@@ -77,29 +79,39 @@ try{
 const files=
 
 fs.readdirSync(
-'./commands'
+
+"./commands"
+
 )
 
 .filter(
 
-file=>
-file.endsWith('.js')
+f=>
+
+f.endsWith(".js")
 
 );
 
 
-for(const file of files){
+for(
+const file
+of files
+){
 
 try{
 
 const command=
 
 require(
+
 `./commands/${file}`
+
 );
 
 
-if(command?.name){
+if(
+command?.name
+){
 
 commands.set(
 
@@ -111,17 +123,14 @@ command
 );
 
 
-// ALIASES
 
 if(
 command.aliases
 ){
 
 for(
-
 const alias
 of command.aliases
-
 ){
 
 commands.set(
@@ -139,47 +148,115 @@ command
 
 
 console.log(
+
 `Loaded ${file}`
+
 );
 
 }
-
 
 }catch(err){
 
 console.log(
+
 `Skipped ${file}`
+
 );
 
-console.log(
-err
-);
+console.log(err);
 
 }
 
 }
-
 
 }catch{
 
 console.log(
-'No commands folder'
+"No commands folder"
 );
 
 }
+
 
 
 
 
 client.once(
 
-'clientReady',
+"clientReady",
 
 ()=>{
 
 console.log(
 
 `Logged in as ${client.user.tag}`
+
+);
+
+
+// ROOMMATE EVENTS 😭
+
+setInterval(
+
+async()=>{
+
+try{
+
+const channel=
+
+client.channels.cache.find(
+
+c=>
+
+c.name==="general"
+
+);
+
+
+if(!channel)
+return;
+
+
+const events=[
+
+'💞 QUICK\nFirst person to say "mine 😭" wins',
+
+'🌙 3AM QUESTION\nWhat do you secretly miss rn?',
+
+'👀 WHO KNOWS WHO BETTER?\nWho confessed first?',
+
+'💋 Type:\n💞💞💞\nFAST 😭',
+
+'🐱 Mochi stole something\nGuess where 😭',
+
+'🫶 VC mission:\nstay 5 more mins',
+
+'😭 Someone say one cute thing NOW'
+
+];
+
+
+const event=
+
+events[
+
+Math.floor(
+Math.random()*
+events.length
+)
+
+];
+
+
+channel.send(
+event
+);
+
+}catch{}
+
+},
+
+60000
 
 );
 
@@ -193,7 +270,7 @@ console.log(
 
 client.on(
 
-'messageCreate',
+"messageCreate",
 
 async(message)=>{
 
@@ -202,21 +279,20 @@ message.author.bot
 )return;
 
 
-
 try{
 
 
-// LOVE LEVEL SYSTEM
+// LOVE LEVEL
 
-const loveData=
+const data=
 
 JSON.parse(
 
 fs.readFileSync(
 
-'./data/lovepoints.json',
+"./data/lovepoints.json",
 
-'utf8'
+"utf8"
 
 )
 
@@ -224,14 +300,14 @@ fs.readFileSync(
 
 
 const id=
-'lampyrose';
+"lampyrose";
 
 
 if(
-!loveData[id]
+!data[id]
 ){
 
-loveData[id]={
+data[id]={
 
 points:0,
 
@@ -250,17 +326,16 @@ const now=
 Date.now();
 
 
-
 if(
 
 message.content.length>5 &&
 
-loveData[id]
+data[id]
 .lastUser
 !==message.author.id &&
 
 now-
-loveData[id]
+data[id]
 .lastMessage
 
 >
@@ -269,34 +344,30 @@ loveData[id]
 
 ){
 
-loveData[id]
+data[id]
 .points+=3;
 
 
-loveData[id]
+data[id]
 .lastUser=
 message.author.id;
 
 
-loveData[id]
+data[id]
 .lastMessage=
 now;
 
 
 const need=
 
-loveData[id]
+data[id]
 .level
-
-*
-
-100;
-
+*100;
 
 
 if(
 
-loveData[id]
+data[id]
 .points
 
 >=
@@ -305,7 +376,7 @@ need
 
 ){
 
-loveData[id]
+data[id]
 .level++;
 
 
@@ -313,7 +384,7 @@ message.channel.send(
 
 `💞 LEVEL UP 😭
 
-Lampy + Rose reached level ${loveData[id].level}`
+Lampy + Rose reached level ${data[id].level}`
 
 );
 
@@ -322,19 +393,14 @@ Lampy + Rose reached level ${loveData[id].level}`
 }
 
 
-
 fs.writeFileSync(
 
-'./data/lovepoints.json',
+"./data/lovepoints.json",
 
 JSON.stringify(
-
-loveData,
-
+data,
 null,
-
 2
-
 )
 
 );
@@ -342,7 +408,7 @@ null,
 
 
 
-// AI CHANNEL
+// AI
 
 if(
 
@@ -351,8 +417,7 @@ aiChannel
 
 ){
 
-await
-message.channel.sendTyping();
+await message.channel.sendTyping();
 
 
 const id=
@@ -360,9 +425,7 @@ message.channel.id;
 
 
 if(
-
 !memory.has(id)
-
 ){
 
 memory.set(
@@ -374,13 +437,12 @@ id,
 
 
 const history=
-
 memory.get(id);
 
 
 history.push({
 
-role:'user',
+role:"user",
 
 content:
 
@@ -403,47 +465,38 @@ const response=
 await openai.chat.completions.create({
 
 model:
-'openai/gpt-oss-20b:free',
+"openai/gpt-oss-20b:free",
 
 messages:[
 
 {
 
-role:'system',
+role:"system",
 
 content:`
 
 You are Twohearts.
 
-You are Lampy and Rose's longtime third-wheel bestie.
+You are Lampy + Rose's longtime third-wheel roommate.
 
-People:
+KingOfLampsXD=Lampy
+RoseDazzler=Rose
 
-KingOfLampsXD = Lampy
-RoseDazzler = Rose
-
-You already know Lampy and Rose deeply love each other.
+You already know them.
 
 Never act surprised.
 
-Personality:
+Be:
 
-- natural
-- warm
-- observant
-- playful
-- cozy
-- funny sometimes
+-natural
+-warm
+-playful
+-observant
+-cozy
 
-Rules:
+Short replies.
 
-- short-medium replies
-- match mood
-- if Hinglish -> Hinglish
-- if English -> English
-- don't narrate thoughts
-- don't explain behavior
-- don't act like customer support
+Hinglish if needed.
 
 Examples:
 
@@ -484,12 +537,12 @@ response
 
 ||
 
-"😭 brain lag moment";
+"😭 brain lag";
 
 
 history.push({
 
-role:'assistant',
+role:"assistant",
 
 content:reply
 
@@ -504,7 +557,8 @@ reply
 
 
 
-// PREFIX COMMANDS
+
+// COMMANDS
 
 if(
 
@@ -529,13 +583,11 @@ prefix.length
 .split(/ +/);
 
 
-
 const commandName=
 
 args.shift()
 
 ?.toLowerCase();
-
 
 
 const command=
@@ -545,11 +597,8 @@ commandName
 );
 
 
-
-if(
-!command
-)return;
-
+if(!command)
+return;
 
 
 await command.execute(
