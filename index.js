@@ -1,4 +1,4 @@
-const {
+const{
 Client,
 GatewayIntentBits
 }=require("discord.js");
@@ -18,7 +18,6 @@ GatewayIntentBits.MessageContent
 
 });
 
-
 const openai=new OpenAI({
 
 apiKey:
@@ -28,7 +27,6 @@ baseURL:
 "https://openrouter.ai/api/v1"
 
 });
-
 
 const prefix="RL!";
 const aiChannel="twohearts-ai";
@@ -47,7 +45,6 @@ if(
 fs.mkdirSync("./data");
 
 }
-
 
 if(
 
@@ -80,7 +77,6 @@ fs.readdirSync("./commands")
 .filter(
 
 f=>
-
 f.endsWith(".js")
 
 );
@@ -93,13 +89,12 @@ try{
 const command=
 
 require(
-
 `./commands/${file}`
-
 );
 
-
-if(!command?.name)
+if(
+!command?.name
+)
 continue;
 
 
@@ -146,8 +141,6 @@ console.log(
 `Skipped ${file}`
 );
 
-console.log(err);
-
 }
 
 }
@@ -169,7 +162,9 @@ console.log(
 );
 
 
-// ROOMMATE MODE
+
+
+// ROOMMATE EVENTS
 
 setInterval(
 
@@ -182,11 +177,9 @@ const channel=
 client.channels.cache.find(
 
 c=>
-
 c.name==="general"
 
 );
-
 
 if(!channel)
 return;
@@ -254,9 +247,7 @@ channel.send(
 
 `🏆 ${m.author}
 
-correct 😭
-
-+10 Love XP`
+correct 😭`
 
 );
 
@@ -268,7 +259,6 @@ collector.stop();
 
 );
 
-
 return;
 
 }
@@ -276,7 +266,7 @@ return;
 
 
 
-// TYPING GAME
+// TYPING
 
 if(type===1){
 
@@ -290,9 +280,7 @@ const words=[
 
 "LampyLovesRose",
 
-"DistanceLosingAgain",
-
-"SleepCallGoblin"
+"DistanceLosingAgain"
 
 ];
 
@@ -313,9 +301,7 @@ await channel.send(
 
 Type:
 
-${word}
-
-FAST 😭`
+${word}`
 
 );
 
@@ -359,7 +345,6 @@ collector.stop();
 }
 
 );
-
 
 return;
 
@@ -437,8 +422,6 @@ channel.send(
 
 FOUND IT 😭
 
-Mochi stole:
-
 ${item}`
 
 );
@@ -466,6 +449,7 @@ console.log(err);
 }
 
 );
+
 
 
 
@@ -539,10 +523,7 @@ data[id]
 now-
 data[id]
 .lastMessage
-
->
-
-10000
+>10000
 
 ){
 
@@ -578,9 +559,7 @@ message.channel.send(
 
 `💞 LEVEL UP
 
-Level:
-
-${data[id].level}`
+Level ${data[id].level}`
 
 );
 
@@ -607,11 +586,14 @@ null,
 // AI
 
 if(
-
-message.channel.name===
-aiChannel
-
+message.channel.name===aiChannel
 ){
+
+if(
+message.content.startsWith(prefix)
+)
+return;
+
 
 await message.channel.sendTyping();
 
@@ -648,10 +630,49 @@ content:
 
 
 if(
-history.length>12
-)
+history.length>20
+){
+
 history.shift();
 
+}
+
+
+let mood="normal";
+
+const text=
+
+message.content
+.toLowerCase();
+
+
+if(
+text.includes("sad")
+||
+text.includes("cry")
+)
+mood="comfort";
+
+
+if(
+text.includes("sleep")
+)
+mood="sleepy";
+
+
+if(
+text.includes("baby")
+||
+text.includes("love")
+)
+mood="soft";
+
+
+let reply=
+"😭 brain lag";
+
+
+try{
 
 
 const response=
@@ -676,18 +697,33 @@ Rose=RoseDazzler
 
 Longtime third-wheel roommate.
 
-Warm
-playful
+You already know them deeply.
+
+Never act surprised.
+
+Be:
+
+human
+warm
 cozy
-natural
+playful
+observant
 
 Short replies.
+
+Hinglish if needed.
 
 Lampy:
 Rose?
 
 You:
 probably afk 😭
+
+Rose:
+baby
+
+You:
+aww 😭 kya hua
 
 `
 
@@ -700,15 +736,39 @@ probably afk 😭
 });
 
 
-const reply=
+reply=
 
 response
 ?.choices?.[0]
 ?.message?.content
 
 ||
+"😭 forgot what i was saying";
 
-"😭 brain lag";
+}catch(err){
+
+console.log(err);
+
+const fallback=[
+
+"probably afk 😭",
+"brain.exe stopped",
+"😭 Mochi interrupted me",
+"BRO my brain lagged"
+
+];
+
+
+reply=
+
+fallback[
+Math.floor(
+Math.random()*
+fallback.length
+)
+];
+
+}
 
 
 history.push({
@@ -732,25 +792,16 @@ reply
 // COMMANDS
 
 if(
-
-!message.content
-.startsWith(prefix)
-
+!message.content.startsWith(prefix)
 )
-
 return;
 
 
 const args=
 
 message.content
-
-.slice(
-prefix.length
-)
-
+.slice(prefix.length)
 .trim()
-
 .split(/ +/);
 
 
@@ -772,27 +823,18 @@ return;
 
 
 await command.execute(
-message,
-args
+message,args
 );
-
 
 }catch(err){
 
 console.log(err);
 
-message.reply(
-
-`❌ ${err.message}`
-
-).catch(()=>{});
-
 }
 
 }
 
 );
-
 
 
 client.login(
