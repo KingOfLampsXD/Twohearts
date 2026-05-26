@@ -5,43 +5,87 @@ EmbedBuilder
 module.exports={
 
 name:"cantletgo",
+aliases:["clingy","lockedin"],
 
 async execute(message){
 
-const scenes=[
+const moments=[
 
-[
-"💞 Rose moved a little closer...",
-"😭 Lampy looked at her for 2 seconds too long.",
-"❤️ Eye contact established.",
-"🌙 Heartbeat increased.",
-"✨ Personal space has officially disappeared.",
-"💖 Result: maximum blush damage."
-],
+`🌙 Late night mode activated...
 
-[
-"🌸 Rose leaned onto Lampy...",
-"😭 Brain.exe stopped functioning.",
-"💞 Lampy immediately held her closer.",
-"❤️ Escape chances: 0%",
-"🌙 Nearby air quality changed.",
-"✨ Clingy level exceeded safe limits."
-],
+Everything was quiet.
 
-[
-"💖 Late night energy activated...",
-"🌙 Rose smiled.",
-"😭 Critical emotional damage detected.",
-"💞 Lampy forgot what he was saying.",
-"❤️ Both players are now stuck together.",
-"✨ Relationship combo x999"
-]
+Rose moved a little closer.
+
+Lampy noticed.
+
+Then noticed again.
+
+...
+
+Silence.
+
+A few seconds passed.
+
+💞 Rose leaned against him.
+
+Without even thinking,
+Lampy held her a little closer.
+
+No one said anything.
+
+But somehow the room felt warmer.
+
+❤️ Heartbeat level: increasing
+😭 Brain.exe: stopped functioning
+🌸 Escape chances: 0%`,
+
+`💖 Twohearts relationship report:
+
+Rose smiled.
+
+Critical mistake.
+
+Lampy completely forgot
+what he was about to say.
+
+Eye contact lasted...
+
+a little too long.
+
+✨ Nearby atmosphere changed.
+
+Personal space slowly vanished.
+
+💞 Status:
+maximum clingy energy reached.`,
+
+`😭 Emergency heart report:
+
+Distance between Lampy and Rose:
+
+basically nonexistent.
+
+Rose rested closer.
+
+Lampy immediately wrapped an arm around her.
+
+Several moments later...
+
+nobody remembered who started it.
+
+🌙 Mood: attached
+❤️ Affection: MAX
+💞 Leaving: denied`
 
 ];
 
-const story=
-scenes[
-Math.floor(Math.random()*scenes.length)
+
+const scene=
+moments[
+Math.floor(
+Math.random()*moments.length
+)
 ];
 
 
@@ -49,31 +93,21 @@ const embed=
 new EmbedBuilder()
 
 .setColor("#ff7eb6")
-.setTitle("💞 Can't Let Go")
 
-.setDescription(story[0])
+.setTitle(
+"💞 Can't Let Go"
+)
+
+.setDescription(scene)
 
 .setFooter({
-text:"Lampy ❤️ Rose"
+text:"Lampy ❤️ Rose forever"
 });
 
-const msg=
-await message.reply({
+
+message.reply({
 embeds:[embed]
 });
-
-
-for(let i=1;i<story.length;i++){
-
-await new Promise(r=>
-setTimeout(r,1800)
-);
-
-await message.channel.send(
-story[i]
-);
-
-}
 
 }
 
