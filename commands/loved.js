@@ -9,94 +9,87 @@ aliases:["loveletter","ll"],
 
 async execute(message){
 
-const starts=[
+const letters=[
 
-"💌 Dear Rose,",
-"🌸 My favorite person,",
-"💞 Tiny message for you,",
-"🌙 Late night thoughts:",
-"😭 Emergency heart report:"
-];
+`🌙 Late night thoughts...
 
-const actions=[
+Rose, if I had to choose between sleep and you...
 
-"you stole",
-"you accidentally hacked",
-"you quietly collected",
-"you kidnapped",
-"you completely destroyed",
-"you secretly upgraded"
-];
+yeah sleep lost 😭💞`,
 
-const targets=[
+`💌 Love note:
 
-"my heart",
-"my sleep schedule",
-"my entire brain",
-"my attention span",
-"my daily happiness",
-"my favorite moments",
-"my world"
-];
+Somehow you became my favorite notification.
 
-const endings=[
+I still don't know how.`,
 
-"and I still want more 😭💞",
-"now escape is impossible.",
-"mission failed successfully.",
-"and I blame you.",
-"forever accepted.",
-"relationship level increased.",
-"now we're stuck together."
-];
+`🌸 Tiny confession:
 
-const extras=[
+Maximum clingy energy detected.
 
-"🌸 +100 clingy XP",
-"💖 Rose used: smile",
-"😭 Lampy stopped functioning",
-"🌙 Maximum blush detected",
-"💍 Love level up",
-"🐱 Mochi approves this"
+Escape disabled.`,
+
+`💞 Relationship status:
+
+Rose smiled.
+
+Lampy stopped functioning 😭`,
+
+`✨ Twohearts report:
+
+Distance Monster defeated.
+
+Reason:
+
+too much love.`,
+
+`😭 Emergency message:
+
+Love levels exceeded safe limits.
+
+System overheating.`,
+
+`💖 Small reminder:
+
+No matter what happens—
+
+Lampy ❤️ Rose forever.`
+
 ];
 
 const gifs=[
 
-"https://media.tenor.com/4N6kK7Y4F6QAAAAd/anime-love.gif",
 "https://media.tenor.com/y2w6sY0l2r8AAAAd/cute-anime-hug.gif",
 "https://media.tenor.com/WK_Ds6P7A5EAAAAd/couple-anime.gif",
-"https://media.tenor.com/8of4p8G7KfUAAAAd/love-heart.gif"
+"https://media.tenor.com/4N6kK7Y4F6QAAAAd/anime-love.gif"
 
 ];
 
+const letter=
+letters[
+Math.floor(
+Math.random()*letters.length
+)];
 
-const text=
-
-`${starts[Math.floor(Math.random()*starts.length)]}
-
-You ${actions[Math.floor(Math.random()*actions.length)]}
-${targets[Math.floor(Math.random()*targets.length)]}
-
-${endings[Math.floor(Math.random()*endings.length)]}
-
-${extras[Math.floor(Math.random()*extras.length)]}`;
-
+const gif=
+gifs[
+Math.floor(
+Math.random()*gifs.length
+)];
 
 const embed=
 new EmbedBuilder()
 
 .setColor("#ff7eb6")
+
 .setTitle("💞 Loved.exe")
-.setDescription(text)
-.setImage(
-gifs[
-Math.floor(
-Math.random()*gifs.length
-)
-]
-)
+
+.setDescription(letter)
+
+.setImage(gif)
+
 .setFooter({
-text:"Lampy ❤️ Rose forever"
+text:"Lampy ❤️ Rose forever 😭"
 });
 
 
