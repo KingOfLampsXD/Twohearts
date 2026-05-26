@@ -5,27 +5,34 @@ EmbedBuilder
 module.exports={
 
 name:"susjoke",
-aliases:["dirtyjoke"],
+aliases:["dirtyjoke","sus"],
 
 async execute(message){
 
 const jokes=[
 
-"😭 Rose: 'come closer.' \nLampy: *system immediately overheats*",
+"🌙 Rose: 'come closer.'\n😭 Lampy: 'for what exactly...?'",
 
-"💞 Relationship status:\nstarted with 'hi' and somehow became daily brain occupation.",
+"💞 Relationship report:\nstarted with holding hands...\nnow personal space no longer exists.",
 
-"🌙 Rose: 'we need to talk.'\nLampy heart rate: 📈📈📈",
+"❤️ Rose sat a little closer.\nLampy brain: 'stay calm bro stay calm'",
 
-"💖 Lampy: 'I can explain.'\nNarrator: he could not explain.",
+"😭 Late night rule:\nif Rose says '5 more minutes'...\nit's never 5 minutes.",
 
-"😭 Eye contact lasted 3 seconds.\nBoth players affected by emotional damage.",
+"🌸 Rose: '*looks at Lampy*'\nLampy heart rate: 📈📈📈📈",
 
-"💞 Warning:\nToo much flirting may cause accidental marriage.",
+"💖 Twohearts warning:\nserious eye contact detected.\nOutcome: absolute chaos.",
 
-"🌸 Rose smiled.\nLampy CPU usage: 99%"
+"😭 Bedroom energy activated:\nNobody spoke.\nBoth became extremely aware of each other's existence.",
+
+"💞 Rose smiled.\nLampy immediately forgot every thought he had.",
+
+"🌙 Relationship difficulty:\ntrying to act normal around your favorite person.",
+
+"❤️ Lampy: 'I'm completely fine.'\nNarrator: he was NOT completely fine."
 
 ];
+
 
 const joke=
 jokes[Math.floor(
@@ -35,12 +42,15 @@ Math.random()*jokes.length
 const embed=
 new EmbedBuilder()
 
-.setColor("#ff7eb6")
+.setColor("#ff4f9d")
 .setTitle("😳 Sus Joke")
+
 .setDescription(joke)
+
 .setFooter({
-text:"Twohearts being a menace 😭"
+text:"Lampy ❤️ Rose late night energy"
 });
+
 
 message.reply({
 embeds:[embed]
