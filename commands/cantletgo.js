@@ -8,35 +8,72 @@ name:"cantletgo",
 
 async execute(message){
 
-const moments=[
+const scenes=[
 
-"😭 Lampy wrapped Rose in maximum clingy mode",
-"💞 escape attempt detected... denied",
-"🌸 Rose leaned closer and stayed",
-"💖 affection overflow reached dangerous levels",
-"🌙 forehead touch activated"
+[
+"💞 Rose moved a little closer...",
+"😭 Lampy looked at her for 2 seconds too long.",
+"❤️ Eye contact established.",
+"🌙 Heartbeat increased.",
+"✨ Personal space has officially disappeared.",
+"💖 Result: maximum blush damage."
+],
+
+[
+"🌸 Rose leaned onto Lampy...",
+"😭 Brain.exe stopped functioning.",
+"💞 Lampy immediately held her closer.",
+"❤️ Escape chances: 0%",
+"🌙 Nearby air quality changed.",
+"✨ Clingy level exceeded safe limits."
+],
+
+[
+"💖 Late night energy activated...",
+"🌙 Rose smiled.",
+"😭 Critical emotional damage detected.",
+"💞 Lampy forgot what he was saying.",
+"❤️ Both players are now stuck together.",
+"✨ Relationship combo x999"
+]
 
 ];
 
-const msg=
-moments[
-Math.floor(
-Math.random()*moments.length
-)];
+const story=
+scenes[
+Math.floor(Math.random()*scenes.length)
+];
+
 
 const embed=
 new EmbedBuilder()
 
 .setColor("#ff7eb6")
 .setTitle("💞 Can't Let Go")
-.setDescription(msg+"\n\n+999 love energy")
+
+.setDescription(story[0])
+
 .setFooter({
 text:"Lampy ❤️ Rose"
 });
 
-message.reply({
+const msg=
+await message.reply({
 embeds:[embed]
 });
+
+
+for(let i=1;i<story.length;i++){
+
+await new Promise(r=>
+setTimeout(r,1800)
+);
+
+await message.channel.send(
+story[i]
+);
+
+}
 
 }
 
