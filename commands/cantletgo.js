@@ -5,109 +5,67 @@ EmbedBuilder
 module.exports={
 
 name:"cantletgo",
-aliases:["clingy","lockedin"],
+aliases:["clingy"],
 
 async execute(message){
 
-const moments=[
+const scenes=[
 
-`🌙 Late night mode activated...
+[
+"🌙 Late night mode activated...",
+"💞 Rose moved a little closer.",
+"😭 Lampy noticed instantly.",
+"...then looked away.",
+"...then looked back.",
+"❤️ Eye contact lasted a little too long.",
+"🌸 Rose leaned against him.",
+"💖 Lampy immediately pulled her closer.",
+"✨ Personal space is no longer available.",
+"😭 Brain.exe stopped functioning.",
+"💞 Status: absolutely inseparable."
+],
 
-Everything was quiet.
-
-Rose moved a little closer.
-
-Lampy noticed.
-
-Then noticed again.
-
-...
-
-Silence.
-
-A few seconds passed.
-
-💞 Rose leaned against him.
-
-Without even thinking,
-Lampy held her a little closer.
-
-No one said anything.
-
-But somehow the room felt warmer.
-
-❤️ Heartbeat level: increasing
-😭 Brain.exe: stopped functioning
-🌸 Escape chances: 0%`,
-
-`💖 Twohearts relationship report:
-
-Rose smiled.
-
-Critical mistake.
-
-Lampy completely forgot
-what he was about to say.
-
-Eye contact lasted...
-
-a little too long.
-
-✨ Nearby atmosphere changed.
-
-Personal space slowly vanished.
-
-💞 Status:
-maximum clingy energy reached.`,
-
-`😭 Emergency heart report:
-
-Distance between Lampy and Rose:
-
-basically nonexistent.
-
-Rose rested closer.
-
-Lampy immediately wrapped an arm around her.
-
-Several moments later...
-
-nobody remembered who started it.
-
-🌙 Mood: attached
-❤️ Affection: MAX
-💞 Leaving: denied`
+[
+"💖 Relationship warning...",
+"🌙 Rose smiled.",
+"😭 Critical mistake.",
+"❤️ Heartbeat increased immediately.",
+"💞 Distance between them slowly disappeared.",
+"🌸 Silence somehow became louder.",
+"✨ Nearby atmosphere changed.",
+"😭 Escape chances: 0%",
+"💖 Affection level: MAX"
+]
 
 ];
 
-
-const scene=
-moments[
-Math.floor(
-Math.random()*moments.length
-)
-];
-
+const story=
+scenes[Math.floor(Math.random()*scenes.length)];
 
 const embed=
 new EmbedBuilder()
-
 .setColor("#ff7eb6")
-
-.setTitle(
-"💞 Can't Let Go"
-)
-
-.setDescription(scene)
-
+.setTitle("💞 Can't Let Go")
+.setDescription(story[0])
 .setFooter({
-text:"Lampy ❤️ Rose forever"
+text:"Lampy ❤️ Rose"
 });
 
-
-message.reply({
+await message.reply({
 embeds:[embed]
 });
+
+for(let i=1;i<story.length;i++){
+
+await new Promise(
+r=>setTimeout(r,1700)
+);
+
+await message.channel.send(
+story[i]
+);
+
+}
 
 }
 
