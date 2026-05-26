@@ -4,7 +4,7 @@ EmbedBuilder
 
 module.exports={
 
-name:"susjoke",
+name:"joke",
 aliases:["dirtyjoke","sus"],
 
 async execute(message){
