@@ -1,35 +1,48 @@
-module.exports = {
+const fs=require("fs");
 
-name:'hug',
+module.exports={
 
-async execute(message,args){
+name:"hug",
 
-const hugs=[
+async execute(message){
 
-"💖 Lampy gave Rose the biggest hug ever 😭",
+const data=
 
-"🫂 Rose activated cuddle mode",
-
-"💕 Twohearts witnessed maximum love energy",
-
-"😭 Lampy and Rose unlocked comfort buff +100",
-
-"✨ emergency hug deployed"
-
-];
-
-const random=
-
-hugs[
-Math.floor(
-Math.random()*hugs.length
+JSON.parse(
+fs.readFileSync(
+"./data/dungeon.json",
+"utf8"
 )
-];
+);
 
-message.reply(
-random
+const id="lampyrose";
+
+if(!data[id])
+return;
+
+
+data[id]
+.shield+=20;
+
+
+fs.writeFileSync(
+"./data/dungeon.json",
+JSON.stringify(
+data,
+null,
+2
+)
+);
+
+
+message.channel.send(
+
+`💞 Lampy hugged Rose
+
+Shield +20 😭`
+
 );
 
 }
 
-};
+}
