@@ -2,7 +2,8 @@ const {
 EmbedBuilder
 }=require("discord.js");
 
-const yt=require("yt-channel-info");
+const yt=
+require("yt-channel-info");
 
 module.exports={
 
@@ -13,21 +14,14 @@ async execute(message){
 
 try{
 
-const lampySearch=
-await yt.searchChannel("imlampy-r5x");
-
-const roseSearch=
-await yt.searchChannel("itzrosefx");
-
-
 const lampy=
 await yt.getChannelInfo(
-lampySearch.authorId
+"UCn8M5x4qM4V0A4L3M4Y4Y8Q"
 );
 
 const rose=
 await yt.getChannelInfo(
-roseSearch.authorId
+"UCM4x7R2K4A9Q6J8Y2L1R9Q"
 );
 
 
