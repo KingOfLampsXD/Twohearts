@@ -2,8 +2,7 @@ const {
 EmbedBuilder
 }=require("discord.js");
 
-const yt=
-require("yt-channel-info");
+const yt=require("yt-channel-info");
 
 module.exports={
 
@@ -14,21 +13,28 @@ async execute(message){
 
 try{
 
+const lampySearch=
+await yt.searchChannel("imlampy-r5x");
+
+const roseSearch=
+await yt.searchChannel("itzrosefx");
+
+
 const lampy=
 await yt.getChannelInfo(
-"UCxxxxxxxx"
+lampySearch.authorId
 );
 
 const rose=
 await yt.getChannelInfo(
-"UCyyyyyyyy"
+roseSearch.authorId
 );
 
 
 const embed=
 new EmbedBuilder()
 
-.setColor("#ff0000")
+.setColor("#ff4f9d")
 
 .setTitle(
 "📺 Lampy ❤️ Rose Creator Hub"
@@ -61,9 +67,8 @@ inline:true
 )
 
 .setFooter({
-text:"live stats 😭💞"
+text:"live creator stats 😭💞"
 });
-
 
 message.reply({
 embeds:[embed]
@@ -74,7 +79,7 @@ embeds:[embed]
 console.log(err);
 
 message.reply(
-"😭 YouTube exploded"
+`😭 ${err.message}`
 );
 
 }
