@@ -16,12 +16,12 @@ try{
 
 const lampy=
 await YouTube.searchOne(
-"I'm Lampy"
+"@imlampy-r5x"
 );
 
 const rose=
 await YouTube.searchOne(
-"RoseFX"
+"@itzrosefx"
 );
 
 
@@ -46,13 +46,13 @@ name:"🔥 I'm Lampy",
 value:
 
 `👥 Subs:
-${lampy?.subscriberCount || "213+"}
+${lampy?.subscriberCount || "Unknown"}
 
-🎬 Videos:
-${lampy?.videos?.length || "11"}
+🎬 Channel:
+${lampy?.channel?.name || "I'm Lampy"}
 
 🔗
-${lampy.url}`,
+https://youtube.com/@imlampy-r5x`,
 
 inline:true
 },
@@ -65,24 +65,28 @@ value:
 `👥 Subs:
 ${rose?.subscriberCount || "Unknown"}
 
-🎬 Videos:
-${rose?.videos?.length || "Unknown"}
+🎬 Channel:
+${rose?.channel?.name || "RoseFX"}
 
 🔗
-${rose.url}`,
+https://youtube.com/@itzrosefx`,
 
 inline:true
 }
 
 )
 
+.setThumbnail(
+lampy?.thumbnail?.url ||
+null
+)
+
 .setFooter({
 
 text:
-"Lampy ❤️ Rose"
+"RL!youtube • Lampy ❤️ Rose"
 
 });
-
 
 message.reply({
 embeds:[embed]
