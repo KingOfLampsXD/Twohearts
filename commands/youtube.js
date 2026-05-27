@@ -1,90 +1,131 @@
-const { EmbedBuilder } = require("discord.js");
-const yt = require("yt-channel-info");
+const {
+EmbedBuilder
+}=require("discord.js");
 
-module.exports = {
+const yt =
+require("yt-channel-info");
+
+module.exports={
 
 name:"youtube",
-aliases:["yt","creator"],
+aliases:["yt","creator","creators"],
 
 async execute(message){
 
 try{
 
-let lampyData;
-let roseData;
+const lampy =
+await yt.getChannelInfo(
+"UClhRYCA9yXtgWo4aoWu2Qvw"
+);
 
-try{
+const rose =
+await yt.getChannelInfo(
+"UC7i9QRdkUfOxA6dfO99GCFA"
+);
 
-lampyData = await yt.getChannelInfo("UCxxxxxxxxxxxxxxxx");
 
-}catch{
+const randomLines=[
 
-lampyData={
+"💞 Relationship + content grind",
+"😭 Upload schedule: chaos",
+"🌙 Twohearts creator energy",
+"✨ Rose + Lampy takeover"
 
-subscriberCount:"213",
-videoCount:"11",
-viewCount:"11,577"
+];
 
-};
 
-}
+const line=
+randomLines[
+Math.floor(
+Math.random()*randomLines.length
+)
+];
 
-try{
 
-roseData = await yt.getChannelInfo("UCyyyyyyyyyyyyyyyy");
-
-}catch{
-
-roseData={
-
-subscriberCount:"Unknown",
-videoCount:"Unknown",
-viewCount:"Unknown"
-
-};
-
-}
-
-const embed = new EmbedBuilder()
+const embed=
+new EmbedBuilder()
 
 .setColor("#ff4f9d")
 
 .setTitle(
-"🔵 Lampy❤️Rose Creator Hub"
+"📺 Lampy ❤️ Rose Creator Hub"
 )
 
 .setDescription(
-"💞 Live YouTube stats"
+line
 )
 
 .addFields(
 
 {
 name:"🔥 I'm Lampy",
+
 value:
-`👥 Subs: ${lampyData.subscriberCount}
-👀 Views: ${lampyData.viewCount}
-🎬 Videos: ${lampyData.videoCount}`,
+
+`👥 Subs: ${
+lampy.subscriberCount ||
+"Hidden"
+}
+
+👀 Views: ${
+Number(
+lampy.viewCount
+).toLocaleString()
+||
+
+"Unknown"
+}
+
+🎬 Videos: ${
+lampy.videoCount ||
+"Unknown"
+}`,
+
 inline:true
 },
 
 {
 name:"🌸 RoseFX",
+
 value:
-`👥 Subs: ${roseData.subscriberCount}
-👀 Views: ${roseData.viewCount}
-🎬 Videos: ${roseData.videoCount}`,
+
+`👥 Subs: ${
+rose.subscriberCount ||
+"Hidden"
+}
+
+👀 Views: ${
+Number(
+rose.viewCount
+).toLocaleString()
+||
+
+"Unknown"
+}
+
+🎬 Videos: ${
+rose.videoCount ||
+"Unknown"
+}`,
+
 inline:true
 }
 
 )
 
 .setFooter({
-text:"RL!youtube • Lampy ❤️ Rose"
+
+text:
+"RL!youtube • Lampy ❤️ Rose"
+
 });
 
+
 message.reply({
+
 embeds:[embed]
+
 });
 
 }catch(err){
@@ -92,7 +133,11 @@ embeds:[embed]
 console.log(err);
 
 message.reply(
-`😭 ${err.message}`
+
+`😭 YouTube attacked us:
+
+${err.message}`
+
 );
 
 }
