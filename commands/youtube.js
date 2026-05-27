@@ -2,8 +2,8 @@ const {
 EmbedBuilder
 }=require("discord.js");
 
-const yt =
-require("yt-channel-info");
+const YouTube=
+require("youtube-sr").default;
 
 module.exports={
 
@@ -14,33 +14,15 @@ async execute(message){
 
 try{
 
-const lampy =
-await yt.getChannelInfo(
-"UClhRYCA9yXtgWo4aoWu2Qvw"
+const lampy=
+await YouTube.searchOne(
+"I'm Lampy"
 );
 
-const rose =
-await yt.getChannelInfo(
-"UC7i9QRdkUfOxA6dfO99GCFA"
+const rose=
+await YouTube.searchOne(
+"RoseFX"
 );
-
-
-const randomLines=[
-
-"💞 Relationship + content grind",
-"😭 Upload schedule: chaos",
-"🌙 Twohearts creator energy",
-"✨ Rose + Lampy takeover"
-
-];
-
-
-const line=
-randomLines[
-Math.floor(
-Math.random()*randomLines.length
-)
-];
 
 
 const embed=
@@ -53,7 +35,7 @@ new EmbedBuilder()
 )
 
 .setDescription(
-line
+"💞 Live creator stats"
 )
 
 .addFields(
@@ -63,24 +45,14 @@ name:"🔥 I'm Lampy",
 
 value:
 
-`👥 Subs: ${
-lampy.subscriberCount ||
-"Hidden"
-}
+`👥 Subs:
+${lampy?.subscriberCount || "213+"}
 
-👀 Views: ${
-Number(
-lampy.viewCount
-).toLocaleString()
-||
+🎬 Videos:
+${lampy?.videos?.length || "11"}
 
-"Unknown"
-}
-
-🎬 Videos: ${
-lampy.videoCount ||
-"Unknown"
-}`,
+🔗
+${lampy.url}`,
 
 inline:true
 },
@@ -90,24 +62,14 @@ name:"🌸 RoseFX",
 
 value:
 
-`👥 Subs: ${
-rose.subscriberCount ||
-"Hidden"
-}
+`👥 Subs:
+${rose?.subscriberCount || "Unknown"}
 
-👀 Views: ${
-Number(
-rose.viewCount
-).toLocaleString()
-||
+🎬 Videos:
+${rose?.videos?.length || "Unknown"}
 
-"Unknown"
-}
-
-🎬 Videos: ${
-rose.videoCount ||
-"Unknown"
-}`,
+🔗
+${rose.url}`,
 
 inline:true
 }
@@ -117,15 +79,13 @@ inline:true
 .setFooter({
 
 text:
-"RL!youtube • Lampy ❤️ Rose"
+"Lampy ❤️ Rose"
 
 });
 
 
 message.reply({
-
 embeds:[embed]
-
 });
 
 }catch(err){
@@ -133,11 +93,7 @@ embeds:[embed]
 console.log(err);
 
 message.reply(
-
-`😭 YouTube attacked us:
-
-${err.message}`
-
+`😭 ${err.message}`
 );
 
 }
