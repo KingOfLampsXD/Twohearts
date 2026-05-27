@@ -1,83 +1,67 @@
-const {
-EmbedBuilder
-}=require("discord.js");
+const { EmbedBuilder } = require("discord.js");
+const yt = require("yt-channel-info");
 
-const yt=
-require("yt-channel-info");
+module.exports = {
+  name:"youtube",
+  aliases:["yt"],
 
-module.exports={
+  async execute(message){
 
-name:"youtube",
-aliases:["yt"],
+    try{
 
-async execute(message){
+      const lampy = await yt.getChannelInfo("imlampy-r5x");
+      const rose = await yt.getChannelInfo("itzrosefx");
 
-try{
+      const embed = new EmbedBuilder()
 
-const lampy=
-await yt.getChannelInfo(
-"UCn8M5x4qM4V0A4L3M4Y4Y8Q"
-);
+      .setColor("#ff4f9d")
 
-const rose=
-await yt.getChannelInfo(
-"UCM4x7R2K4A9Q6J8Y2L1R9Q"
-);
+      .setTitle("📺 Lampy ❤️ Rose Creator Hub")
 
+      .setDescription(
+      "Live creator stats 💞"
+      )
 
-const embed=
-new EmbedBuilder()
+      .addFields(
 
-.setColor("#ff4f9d")
-
-.setTitle(
-"📺 Lampy ❤️ Rose Creator Hub"
-)
-
-.addFields(
-
-{
-name:"🔥 Lampy",
-
-value:
+      {
+        name:"🔥 I'm Lampy",
+        value:
 `👥 Subs: ${lampy.subscriberCount}
 👀 Views: ${lampy.viewCount}
 🎬 Videos: ${lampy.videoCount}`,
-
 inline:true
-},
+      },
 
-{
-name:"🌸 Rose",
-
-value:
+      {
+        name:"🌸 RoseFX",
+        value:
 `👥 Subs: ${rose.subscriberCount}
 👀 Views: ${rose.viewCount}
 🎬 Videos: ${rose.videoCount}`,
-
 inline:true
-}
+      }
 
-)
+      )
 
-.setFooter({
-text:"live creator stats 😭💞"
-});
+      .setFooter({
+        text:"RL!youtube"
+      });
 
-message.reply({
-embeds:[embed]
-});
+      message.reply({
+        embeds:[embed]
+      });
 
-}catch(err){
+    }catch(err){
 
-console.log(err);
+      console.log(err);
 
-message.reply(
-`😭 ${err.message}`
-);
+      message.reply(
+`😭 Error:
+${err.message}`
+      );
 
-}
+    }
 
-}
-
-}
+  }
+};
