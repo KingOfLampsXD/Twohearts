@@ -41,7 +41,7 @@ Tum mujhe koi bhi 5 punishments de sakti ho, main maan lunga.
 
 Main 7 din ka fast bhi rakh lunga as a sorry.
 
-Mujhe farq nahi padta punishments virtual ho ya real.
+Mujhe farak nahi padta punishments virtual ho ya real.
 
 Main yeh sab sympathy ke liye nahi keh raha.
 
