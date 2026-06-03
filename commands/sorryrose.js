@@ -1,34 +1,20 @@
-const {
-EmbedBuilder
-}=require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 
-module.exports={
+module.exports = {
+    name: "punishment",
 
-name:"punishment",
+    async execute(message) {
 
-async execute(message){
+        const embed = new EmbedBuilder()
+            .setColor("#ff7eb6")
+            .setTitle("💌 Sorry Rose...")
+            .setDescription("https://spin-o-rama-ouch.lovable.app")
+            .setFooter({
+                text: "Lampy ❤️ Rose"
+            });
 
-const embed=
-new EmbedBuilder()
-
-.setColor("#ff7eb6")
-
-.setTitle(
-"💌 Sorry Rose..."
-)
-
-.setDescription(
-https://spin-o-rama-ouch.lovable.app
-)
-
-.setFooter({
-text:"Lampy ❤️ Rose"
-});
-
-message.reply({
-embeds:[embed]
-});
-
-}
-
+        await message.reply({
+            embeds: [embed]
+        });
+    }
 };
