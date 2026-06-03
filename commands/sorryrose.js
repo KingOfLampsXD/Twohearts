@@ -25,7 +25,7 @@ I am really really sorry.
 
 Mujhe bhi nahi pata tha maine itna kuch keh diya tha. Main us time bohot gusse me tha aur honestly rage issues me mera khud par kabu nahi rehta tha.
 
-Jo kuch maine kaha, woh galat tha. Main yeh nahi bol raha ki rage issues ki wajah se sab theek ho jata hai, bas yeh bata raha hu ki us waqt mera dimag sahi se kaam nahi kar raha tha. Main kuch bhi soch raha tha aur jo muh me aa raha tha bol raha tha.
+Jo kuch maine kaha woh galat tha. Main yeh nahi bol raha ki rage issues ki wajah se sab theek ho jata hai, bas yeh bata raha hu ki us waqt mera dimag sahi se kaam nahi kar raha tha. Main kuch bhi soch raha tha aur jo muh me aa raha tha bol raha tha.
 
 Aur maine woh baatein isliye bhi kahi kyunki woh log hum dono ko nahi jaante. Unhe nahi pata tum kaun ho, humare beech kya hai, aur tum mere liye kitni important ho.
 
@@ -33,7 +33,7 @@ Sach bolu toh agar us waqt mera control hota na, toh main woh sab kabhi nahi keh
 
 Main khud ab sochta hu ki maine itna sab kaise bol diya.
 
-Mujhe pata hai maine tumhe hurt kiya. Bohot hurt kiya.
+Mujhe pata hai maine apko hurt kiya. Bohot hurt kiya.
 
 Aur uske liye main genuinely sorry hu.
 
